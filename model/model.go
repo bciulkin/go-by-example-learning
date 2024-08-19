@@ -1,6 +1,12 @@
 package model
 
+import (
+  "fmt"
+  "github.com/google/uuid"
+)
+
 type Animal struct {
+  id uuid.UUID
   Name string
   Age int
 }
@@ -10,8 +16,8 @@ type Cat struct {
   CanMew bool
 }
 
-func newAnimal(name string) *Animal {
-  a := Animal{Name: name}
-  a.Age = 3
-  return &a
+func NewAnimal(name string, age int) Animal {
+  a := Animal{id: uuid.New(), Name: name, Age: age}
+  fmt.Println(a.id)
+  return a
 }
