@@ -6,9 +6,9 @@ import (
 )
 
 type Animal struct {
-  id uuid.UUID
-  Name string
-  Age int
+  id uuid.UUID  `json:"id"`
+  Name string   `json:"name"`
+  Age int       `json:"age"`
 }
 
 type Cat struct {

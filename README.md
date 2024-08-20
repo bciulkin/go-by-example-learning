@@ -4,7 +4,8 @@
 
 TODO:
 - [X] Animal, Dog, Cat structure
-- [ ] Http server
+- [X] Http server
+- [X] JSON handling
 - [ ] CRUD
 - [ ] Error handling
 - [ ] SQLite handling
