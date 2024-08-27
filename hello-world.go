@@ -4,19 +4,20 @@ import (
   "fmt"
   "net/http"
   "go-by-example/model"
-  "strconv"
   "encoding/json"
 )
 
 func main() {
   
   // cat := model.Cat{model.NewAnimal("Wegorz", 2), true}
+  
+  // static data
+  animals := []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2)}
 
   // GET /animal
   http.HandleFunc("/animal", func (w http.ResponseWriter, r *http.Request) {
     if (r.Method == http.MethodGet) {
-      var animal model.Animal = model.NewAnimal("Salsa", 4)
-      var animalJson, _ = json.Marshal(animal)
+      var animalJson, _ = json.Marshal(animals[0])
       fmt.Fprintf(w, string(animalJson))
     }
 
@@ -27,16 +28,20 @@ func main() {
         return
       }
 
-      _, err := strconv.Atoi(idStr)
-      if err != nil {
-        http.Error(w, "invalid id parameter", http.StatusBadRequest)
-        return
-      }
-
       // Respond with success
       w.WriteHeader(http.StatusOK)
       json.NewEncoder(w).Encode(map[string]string{"message": "Animal deleted"})
       return
+
+      for i, animal := range animals {
+        if (animal.Id).String() == idStr {
+          animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
+
+          //w.WriteHeader(http.StatusOk)
+          json.NewEncoder(w).Encode(map[string]string{"message": "Animal deleted"})
+          return
+        }
+      }
 
       // TODO: delete handling after introducing SQLite
 

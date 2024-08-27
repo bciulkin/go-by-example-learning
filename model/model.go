@@ -6,7 +6,7 @@ import (
 )
 
 type Animal struct {
-  id uuid.UUID  `json:"id"`
+  Id uuid.UUID  `json:"id"`
   Name string   `json:"name"`
   Age int       `json:"age"`
 }
@@ -17,7 +17,7 @@ type Cat struct {
 }
 
 func NewAnimal(name string, age int) Animal {
-  a := Animal{id: uuid.New(), Name: name, Age: age}
-  fmt.Println(a.id)
+  a := Animal{Id: uuid.New(), Name: name, Age: age}
+  fmt.Println(a.Id)
   return a
 }
