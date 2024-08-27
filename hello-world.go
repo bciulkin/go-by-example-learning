@@ -29,15 +29,10 @@ func main() {
       }
 
       // Respond with success
-      w.WriteHeader(http.StatusOK)
-      json.NewEncoder(w).Encode(map[string]string{"message": "Animal deleted"})
-      return
-
       for i, animal := range animals {
         if (animal.Id).String() == idStr {
           animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
-
-          //w.WriteHeader(http.StatusOk)
+          w.WriteHeader(http.StatusOK)
           json.NewEncoder(w).Encode(map[string]string{"message": "Animal deleted"})
           return
         }
@@ -45,7 +40,7 @@ func main() {
 
       // TODO: delete handling after introducing SQLite
 
-      // TODO: throw error if not found
+      http.Error(w, "Animal not found", http.StatusNotFound)
     }
   })
 

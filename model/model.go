@@ -18,6 +18,6 @@ type Cat struct {
 
 func NewAnimal(name string, age int) Animal {
   a := Animal{Id: uuid.New(), Name: name, Age: age}
-  fmt.Println(a.Id)
+  fmt.Println("Created animal with ID: " +  (a.Id).String())
   return a
 }
