@@ -12,13 +12,25 @@ func main() {
   // cat := model.Cat{model.NewAnimal("Wegorz", 2), true}
   
   // static data
-  animals := []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2)}
+  animals := []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
 
   // GET /animal
   http.HandleFunc("/animal", func (w http.ResponseWriter, r *http.Request) {
     if (r.Method == http.MethodGet) {
-      var animalJson, _ = json.Marshal(animals[0])
-      fmt.Fprintf(w, string(animalJson))
+      idStr := r.URL.Query().Get("id")
+      if idStr == "" {
+        var animalJson, _ = json.Marshal(animals)
+        fmt.Fprintf(w, string(animalJson))
+      }
+
+      for _, animal := range animals {
+        if (animal.Id).String() == idStr {
+          w.WriteHeader(http.StatusOK)
+          json.NewEncoder(w).Encode(animal)
+          return
+        }
+      }
+      http.Error(w, "Animal not found", http.StatusNotFound)
     }
 
     if (r.Method == http.MethodDelete) {
@@ -37,9 +49,6 @@ func main() {
           return
         }
       }
-
-      // TODO: delete handling after introducing SQLite
-
       http.Error(w, "Animal not found", http.StatusNotFound)
     }
   })
@@ -54,6 +63,9 @@ func main() {
     }
 
     aJosn, _ := json.Marshal(a)
+
+
+
     fmt.Fprintf(rw, string(aJosn))
   })
 

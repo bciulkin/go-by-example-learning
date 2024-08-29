@@ -13,4 +13,5 @@ TODO:
 
 Testing with curl:
 curl -X GET http://localhost:8080/animal             - get list of animals
+curl -X GET http://localhost:8080/animal?id=<id>     - get specific animal
 curl -X DELETE http://localhost:8080/animal?id=<id>  - delete animal from list (WIP)
