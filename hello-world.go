@@ -1,7 +1,7 @@
 package main
 
 import (
-  "fmt"
+  //"fmt"
   "net/http"
   "go-by-example/model"
   "encoding/json"
@@ -9,18 +9,31 @@ import (
 
 func main() {
   
-  // cat := model.Cat{model.NewAnimal("Wegorz", 2), true}
-  
   // static data
   animals := []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
 
   // GET /animal
   http.HandleFunc("/animal", func (w http.ResponseWriter, r *http.Request) {
+      
+    if (r.Method == http.MethodPost) {
+      decoder := json.NewDecoder(r.Body)
+      var newAnimal model.Animal
+      err := decoder.Decode(&newAnimal)
+      if err != nil {
+        panic(err)
+      }
+
+      animals = append(animals, newAnimal)
+      w.WriteHeader(http.StatusCreated)
+      json.NewEncoder(w).Encode(newAnimal)
+    }
+
     if (r.Method == http.MethodGet) {
       idStr := r.URL.Query().Get("id")
       if idStr == "" {
-        var animalJson, _ = json.Marshal(animals)
-        fmt.Fprintf(w, string(animalJson))
+        w.WriteHeader(http.StatusOK)
+        json.NewEncoder(w).Encode(animals)
+        return
       }
 
       for _, animal := range animals {
@@ -51,22 +64,6 @@ func main() {
       }
       http.Error(w, "Animal not found", http.StatusNotFound)
     }
-  })
-
-  // POST /test
-  http.HandleFunc("/test", func (rw http.ResponseWriter, req *http.Request) {
-    decoder := json.NewDecoder(req.Body)
-    var a model.Animal
-    err := decoder.Decode(&a)
-    if err != nil {
-        panic(err)
-    }
-
-    aJosn, _ := json.Marshal(a)
-
-
-
-    fmt.Fprintf(rw, string(aJosn))
   })
 
   http.ListenAndServe(":8080", nil)
