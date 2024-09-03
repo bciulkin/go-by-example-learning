@@ -12,7 +12,6 @@ func main() {
   // static data
   animals := []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
 
-  // GET /animal
   http.HandleFunc("/animal", func (w http.ResponseWriter, r *http.Request) {
       
     if (r.Method == http.MethodPost) {
@@ -26,6 +25,28 @@ func main() {
       animals = append(animals, newAnimal)
       w.WriteHeader(http.StatusCreated)
       json.NewEncoder(w).Encode(newAnimal)
+    }
+
+    if (r.Method == http.MethodPut) {
+      decoder := json.NewDecoder(r.Body)
+      var newAnimal model.Animal
+      err := decoder.Decode(&newAnimal)
+      if err != nil {
+        panic(err)
+      }
+
+      for i, animal := range animals {
+        if animal.Id == newAnimal.Id {
+          animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
+          animals = append(animals, newAnimal) // add updated animal  TODO: investigate how to update it in one line
+
+          w.WriteHeader(http.StatusOK)
+          json.NewEncoder(w).Encode(newAnimal)
+          return
+        }
+      }
+      http.Error(w, "Animal not found", http.StatusNotFound)
+ 
     }
 
     if (r.Method == http.MethodGet) {
@@ -53,7 +74,6 @@ func main() {
         return
       }
 
-      // Respond with success
       for i, animal := range animals {
         if (animal.Id).String() == idStr {
           animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
