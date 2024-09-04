@@ -1,72 +1,19 @@
 package main
 
 import (
-  //"fmt"
+  "fmt"
   "net/http"
   "go-by-example/model"
   "encoding/json"
+  "github.com/gin-gonic/gin"
 )
 
+// staticly loaded data
+var animals = []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
+ 
 func main() {
-  
-  // static data
-  animals := []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
-
   http.HandleFunc("/animal", func (w http.ResponseWriter, r *http.Request) {
       
-    if (r.Method == http.MethodPost) {
-      decoder := json.NewDecoder(r.Body)
-      var newAnimal model.Animal
-      err := decoder.Decode(&newAnimal)
-      if err != nil {
-        panic(err)
-      }
-
-      animals = append(animals, newAnimal)
-      w.WriteHeader(http.StatusCreated)
-      json.NewEncoder(w).Encode(newAnimal)
-    }
-
-    if (r.Method == http.MethodPut) {
-      decoder := json.NewDecoder(r.Body)
-      var newAnimal model.Animal
-      err := decoder.Decode(&newAnimal)
-      if err != nil {
-        panic(err)
-      }
-
-      for i, animal := range animals {
-        if animal.Id == newAnimal.Id {
-          animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
-          animals = append(animals, newAnimal) // add updated animal  TODO: investigate how to update it in one line
-
-          w.WriteHeader(http.StatusOK)
-          json.NewEncoder(w).Encode(newAnimal)
-          return
-        }
-      }
-      http.Error(w, "Animal not found", http.StatusNotFound)
- 
-    }
-
-    if (r.Method == http.MethodGet) {
-      idStr := r.URL.Query().Get("id")
-      if idStr == "" {
-        w.WriteHeader(http.StatusOK)
-        json.NewEncoder(w).Encode(animals)
-        return
-      }
-
-      for _, animal := range animals {
-        if (animal.Id).String() == idStr {
-          w.WriteHeader(http.StatusOK)
-          json.NewEncoder(w).Encode(animal)
-          return
-        }
-      }
-      http.Error(w, "Animal not found", http.StatusNotFound)
-    }
-
     if (r.Method == http.MethodDelete) {
       idStr := r.URL.Query().Get("id")
       if idStr == "" {
@@ -86,5 +33,84 @@ func main() {
     }
   })
 
-  http.ListenAndServe(":8080", nil)
+  router := gin.Default()
+  router.GET("/animal", getAnimals)
+  router.GET("/animal/:id", getAnimalById)
+
+  router.POST("/animal", createAnimal)
+  router.PUT("/animal", updateAnimal)
+  router.DELETE("/animal/:id", deleteAnimalById)
+
+  router.Run("localhost:8080")
+}
+
+func getAnimals(c *gin.Context) {
+  c.IndentedJSON(http.StatusOK, animals)
+}
+
+func getAnimalById(c *gin.Context) {
+  id := c.Param("id")
+  if id == "" {
+    //http.Error(w, "missing id parameter", http.StatusBadRequest)
+    return
+  }
+
+  for _, animal := range animals {
+    if (animal.Id).String() == id {
+      c.IndentedJSON(http.StatusOK, animal)
+      return
+    }
+  }
+//  http.Error(w, "Animal not found", http.StatusNotFound)
+}
+
+func createAnimal(c *gin.Context) {
+
+  var newAnimal model.Animal
+
+  if err := c.BindJSON(&newAnimal); err != nil {
+    return
+  }
+
+  animals = append(animals, newAnimal)
+  c.IndentedJSON(http.StatusCreated, newAnimal)
+}
+
+func updateAnimal(c *gin.Context) {
+  var newAnimal model.Animal
+
+  fmt.Println(newAnimal)
+  fmt.Println(c.BindJSON(&newAnimal))
+  if err := c.BindJSON(&newAnimal); err != nil {
+    fmt.Println("error ")
+    return
+  }
+
+  for i, animal := range animals {
+    fmt.Println(animal)
+    if animal.Id == newAnimal.Id {
+      fmt.Println("weszlo")
+      animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
+      animals = append(animals, newAnimal) // add updated animal  TODO: investigate how to update it in one line
+
+      c.IndentedJSON(http.StatusOK, newAnimal)
+      return
+    }
+  }
+}
+
+func deleteAnimalById(c *gin.Context) {
+  id := c.Param("id")
+  if id == "" {
+    //http.Error(w, "missing id parameter", http.StatusBadRequest)
+    return
+  }
+
+  for i, animal := range animals {
+    if (animal.Id).String() == id {
+      animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
+      c.IndentedJSON(http.StatusOK, map[string]string{"message": "Animal deleted"})
+    }
+  }
+ 
 }
