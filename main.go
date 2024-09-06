@@ -4,7 +4,6 @@ import (
   "fmt"
   "net/http"
   "go-by-example/model"
-  "encoding/json"
   "github.com/gin-gonic/gin"
 )
 
@@ -12,27 +11,6 @@ import (
 var animals = []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
  
 func main() {
-  http.HandleFunc("/animal", func (w http.ResponseWriter, r *http.Request) {
-      
-    if (r.Method == http.MethodDelete) {
-      idStr := r.URL.Query().Get("id")
-      if idStr == "" {
-        http.Error(w, "missing id parameter", http.StatusBadRequest)
-        return
-      }
-
-      for i, animal := range animals {
-        if (animal.Id).String() == idStr {
-          animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
-          w.WriteHeader(http.StatusOK)
-          json.NewEncoder(w).Encode(map[string]string{"message": "Animal deleted"})
-          return
-        }
-      }
-      http.Error(w, "Animal not found", http.StatusNotFound)
-    }
-  })
-
   router := gin.Default()
   router.GET("/animal", getAnimals)
   router.GET("/animal/:id", getAnimalById)
@@ -51,7 +29,7 @@ func getAnimals(c *gin.Context) {
 func getAnimalById(c *gin.Context) {
   id := c.Param("id")
   if id == "" {
-    //http.Error(w, "missing id parameter", http.StatusBadRequest)
+    c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID path parameter"})
     return
   }
 
@@ -61,7 +39,8 @@ func getAnimalById(c *gin.Context) {
       return
     }
   }
-//  http.Error(w, "Animal not found", http.StatusNotFound)
+
+  c.JSON(http.StatusNotFound, gin.H{"errorMessage": "Animal with given ID not found"})
 }
 
 func createAnimal(c *gin.Context) {
@@ -83,6 +62,7 @@ func updateAnimal(c *gin.Context) {
   fmt.Println(c.BindJSON(&newAnimal))
   if err := c.BindJSON(&newAnimal); err != nil {
     fmt.Println("error ")
+    c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Incorrect input data"})
     return
   }
 
@@ -97,20 +77,21 @@ func updateAnimal(c *gin.Context) {
       return
     }
   }
+
+  c.JSON(http.StatusNotFound, gin.H{"errorMessage": "Animal with given ID not found"})
 }
 
 func deleteAnimalById(c *gin.Context) {
   id := c.Param("id")
   if id == "" {
-    //http.Error(w, "missing id parameter", http.StatusBadRequest)
+     c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID in path"})
     return
   }
 
   for i, animal := range animals {
     if (animal.Id).String() == id {
       animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
-      c.IndentedJSON(http.StatusOK, map[string]string{"message": "Animal deleted"})
+      c.IndentedJSON(http.StatusOK, gin.H{"message": "Animal deleted"})
     }
   }
- 
 }
