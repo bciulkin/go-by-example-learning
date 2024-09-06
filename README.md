@@ -14,7 +14,9 @@ TODO:
 - [ ] Authorization
 
 Testing with curl:
+
 | Command | Result |
+| --- | --- |
 | curl -X GET http://localhost:8080/animal | get list of animals |
 | curl -X GET http://localhost:8080/animal/<id> | get specific animal |
 | curl -X DELETE http://localhost:8080/animal/<id> | delete animal from list |
