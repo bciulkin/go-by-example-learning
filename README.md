@@ -8,7 +8,7 @@ TODO:
 - [X] Http server
 - [X] JSON handling
 - [X] CRUD
-- [ ] Error handling
+- [X] Simple error handling
 - [ ] Split into Controller, Service and Repository layer
 - [ ] SQLite handling
 - [ ] Authorization
