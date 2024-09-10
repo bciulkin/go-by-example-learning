@@ -4,13 +4,57 @@ import (
   "fmt"
   "github.com/gin-gonic/gin"
   "net/http"
+  "os"
+  "database/sql"
   "go-by-example/model"
+  "github.com/go-sql-driver/mysql"
 )
 
 // staticly loaded data
-var animals = []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
+var staticAnimals = []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
+
+var db *sql.DB
 
 func GetAnimals(c *gin.Context) {
+
+  dbUser := os.Getenv("DBUSER")
+  dbPass := os.Getenv("DBPASS")
+  cfg := mysql.Config{
+    // Capture connection properties.
+    User: dbUser,
+    Passwd: dbPass,
+    Net:    "tcp",
+    Addr:   "127.0.0.1:3306",
+    DBName: "animals",
+  }
+  // Get a database handle.
+  var err error
+  db, err = sql.Open("mysql", cfg.FormatDSN())
+  if err != nil {
+    fmt.Println(err)
+  }
+
+  pingErr := db.Ping()
+  if pingErr != nil {
+    fmt.Println(pingErr)
+  }
+  fmt.Println("Connected!")
+
+  var animals []model.Animal
+
+  rows, err := db.Query("SELECT * FROM animal")
+  if err != nil {
+    fmt.Println(err)
+  }
+  defer rows.Close()
+  for rows.Next() {
+    var animal model.Animal
+    if err := rows.Scan(&animal.Id, &animal.Name, &animal.Age); err != nil {
+      fmt.Println(err)
+    }
+    animals = append(animals, animal)
+  }
+
   c.IndentedJSON(http.StatusOK, animals)
 }
 
@@ -21,7 +65,7 @@ func GetAnimalById(c *gin.Context) {
     return
   }
 
-  for _, animal := range animals {
+  for _, animal := range staticAnimals {
     if (animal.Id).String() == id {
       c.IndentedJSON(http.StatusOK, animal)
       return
@@ -39,7 +83,7 @@ func CreateAnimal(c *gin.Context) {
     return
   }
 
-  animals = append(animals, newAnimal)
+  staticAnimals = append(staticAnimals, newAnimal)
   c.IndentedJSON(http.StatusCreated, newAnimal)
 }
 
@@ -54,12 +98,12 @@ func UpdateAnimal(c *gin.Context) {
     return
   }
 
-  for i, animal := range animals {
+  for i, animal := range staticAnimals {
     fmt.Println(animal)
     if animal.Id == newAnimal.Id {
       fmt.Println("weszlo")
-      animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
-      animals = append(animals, newAnimal) // add updated animal  TODO: investigate how to update it in one line
+      staticAnimals = append(staticAnimals[:i], staticAnimals[i+1:]...) // delete animal by slicing
+      staticAnimals = append(staticAnimals, newAnimal) // add updated animal  TODO: investigate how to update it in one line
 
       c.IndentedJSON(http.StatusOK, newAnimal)
       return
@@ -76,9 +120,9 @@ func DeleteAnimalById(c *gin.Context) {
     return
   }
 
-  for i, animal := range animals {
+  for i, animal := range staticAnimals {
     if (animal.Id).String() == id {
-      animals = append(animals[:i], animals[i+1:]...) // delete animal by slicing
+      staticAnimals = append(staticAnimals[:i], staticAnimals[i+1:]...) // delete animal by slicing
       c.IndentedJSON(http.StatusOK, gin.H{"message": "Animal deleted"})
     }
   }

@@ -10,10 +10,18 @@ TODO:
 - [X] CRUD
 - [X] Simple error handling
 - [ ] Split into Controller, Service and Repository layer
-- [ ] SQLite handling
+- [X] WIP MySql handling
 - [ ] Authorization
 
-Testing with curl:
+### Local setup:
+
+Run command: 
+`msql` -> `use animals;` -> `source db_scripts/init.sql`
+`go build .` and `go run .`
+
+
+
+### Testing with curl:
 
 | Command | Result |
 | --- | --- |
@@ -23,5 +31,5 @@ Testing with curl:
 | curl -X POST -H "Content-Type: application/json" --data '{"name": "Test", "age":0, "id": "00000000-0000-0000-0000-000000000001"}' http://localhost:8080/animal | create new animal |
 | curl -X PUT -H "Content-Type: application/json" --data '{"name": "Test", "age":0, "id": "<existing ID>"}' http://localhost:8080/animal | update existing animal |
 
-To fix:
+### To fix:
 - [ ] Fix PUT endpoint
