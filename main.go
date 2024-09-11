@@ -6,6 +6,9 @@ import (
 )
 
 func main() {
+  domain.ConnectToDb()
+
+
   router := gin.Default()
   router.GET("/animal", domain.GetAnimals)
   router.GET("/animal/:id", domain.GetAnimalById)

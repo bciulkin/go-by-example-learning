@@ -4,57 +4,15 @@ import (
   "fmt"
   "github.com/gin-gonic/gin"
   "net/http"
-  "os"
-  "database/sql"
   "go-by-example/model"
-  "github.com/go-sql-driver/mysql"
 )
 
 // staticly loaded data
 var staticAnimals = []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
 
-var db *sql.DB
-
 func GetAnimals(c *gin.Context) {
 
-  dbUser := os.Getenv("DBUSER")
-  dbPass := os.Getenv("DBPASS")
-  cfg := mysql.Config{
-    // Capture connection properties.
-    User: dbUser,
-    Passwd: dbPass,
-    Net:    "tcp",
-    Addr:   "127.0.0.1:3306",
-    DBName: "animals",
-  }
-  // Get a database handle.
-  var err error
-  db, err = sql.Open("mysql", cfg.FormatDSN())
-  if err != nil {
-    fmt.Println(err)
-  }
-
-  pingErr := db.Ping()
-  if pingErr != nil {
-    fmt.Println(pingErr)
-  }
-  fmt.Println("Connected!")
-
-  var animals []model.Animal
-
-  rows, err := db.Query("SELECT * FROM animal")
-  if err != nil {
-    fmt.Println(err)
-  }
-  defer rows.Close()
-  for rows.Next() {
-    var animal model.Animal
-    if err := rows.Scan(&animal.Id, &animal.Name, &animal.Age); err != nil {
-      fmt.Println(err)
-    }
-    animals = append(animals, animal)
-  }
-
+  animals := GetAllAnimals()
   c.IndentedJSON(http.StatusOK, animals)
 }
 
