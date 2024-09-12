@@ -12,7 +12,7 @@ var staticAnimals = []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal(
 
 func GetAnimals(c *gin.Context) {
 
-  animals := GetAllAnimals()
+  animals := getAllAnimals()
   c.IndentedJSON(http.StatusOK, animals)
 }
 
@@ -23,14 +23,12 @@ func GetAnimalById(c *gin.Context) {
     return
   }
 
-  for _, animal := range staticAnimals {
-    if (animal.Id).String() == id {
-      c.IndentedJSON(http.StatusOK, animal)
-      return
-    }
+  animal, err := getAnimalById(id)
+  if err != nil {
+    c.JSON(http.StatusNotFound, gin.H{"errorMessage": "Animal with given ID not found"})
   }
 
-  c.JSON(http.StatusNotFound, gin.H{"errorMessage": "Animal with given ID not found"})
+  c.IndentedJSON(http.StatusOK, animal)
 }
 
 func CreateAnimal(c *gin.Context) {

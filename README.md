@@ -9,17 +9,26 @@ TODO:
 - [X] JSON handling
 - [X] CRUD
 - [X] Simple error handling
-- [ ] Split into Controller, Service and Repository layer
-- [X] WIP MySql handling
+- [X] **WIP** Split into Controller, Service and Repository layer
+- [X] **WIP** MySql handling
+- [ ] Logging user proper logger
+- [ ] setup some configuration file
+- [ ] create CLI tool to run service and tests
+- [ ] simple unit testing
 - [ ] Authorization
 
 ### Local setup:
 
-Run command: 
-`msql` -> `use animals;` -> `source db_scripts/init.sql`
-`go build .` and `go run .`
 
+Run commands: 
+`msql` -> `use animals;` -> `source db_scripts/init.sql` to initilize DB
+`
+export DBUSER=<dbuser>
+export DBPASS=<dbpass>
+`
+To initlize env variables
 
+And finially run: `go run .`
 
 ### Testing with curl:
 
