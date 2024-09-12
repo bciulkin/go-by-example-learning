@@ -66,3 +66,12 @@ func getAnimalById(id string) (model.Animal, error) {
   return animal, nil
 }
 
+func addAnimal(anml model.Animal) (model.Animal, error) {
+  _, err := db.Exec("INSERT INTO animal (id, name, age) VALUES (?, ?, ?)", anml.Id, anml.Name, anml.Age)
+  if err != nil {
+    return anml, fmt.Errorf("addAnimal: %v", err)
+  }
+  return getAnimalById(anml.Id.String())
+  
+}
+

@@ -39,8 +39,12 @@ func CreateAnimal(c *gin.Context) {
     return
   }
 
-  staticAnimals = append(staticAnimals, newAnimal)
-  c.IndentedJSON(http.StatusCreated, newAnimal)
+  createdAnimal, err := addAnimal(newAnimal)
+  if err != nil {
+    c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
+  }
+
+  c.IndentedJSON(http.StatusCreated, createdAnimal)
 }
 
 func UpdateAnimal(c *gin.Context) {
