@@ -3,11 +3,11 @@ package main
 import (
   "github.com/gin-gonic/gin"
   "go-by-example/domain"
+  "log"
 )
 
 func main() {
   domain.ConnectToDb()
-
 
   router := gin.Default()
   router.GET("/animal", domain.GetAnimals)
@@ -18,6 +18,6 @@ func main() {
   router.PUT("/animal", domain.UpdateAnimal)
 
   router.Run("localhost:8080")
+
+  log.Println("App has started")
 }
-
-

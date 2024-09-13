@@ -1,7 +1,7 @@
 package domain
 
 import (
-  "fmt"
+  "log"
   "github.com/gin-gonic/gin"
   "net/http"
   "go-by-example/model"
@@ -12,20 +12,25 @@ var staticAnimals = []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal(
 
 func GetAnimals(c *gin.Context) {
 
-  animals := getAllAnimals()
+  animals, err := getAllAnimals()
+  if err != nil {
+    c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
+    return
+  }
+
   c.IndentedJSON(http.StatusOK, animals)
 }
 
 func GetAnimalById(c *gin.Context) {
   id := c.Param("id")
   if id == "" {
-    c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID path parameter"})
+    c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID path parameter"})
     return
   }
 
   animal, err := getAnimalById(id)
   if err != nil {
-    c.JSON(http.StatusNotFound, gin.H{"errorMessage": "Animal with given ID not found"})
+    c.IndentedJSON(http.StatusNotFound, gin.H{"errorMessage": "Animal with given ID not found"})
   }
 
   c.IndentedJSON(http.StatusOK, animal)
@@ -42,6 +47,7 @@ func CreateAnimal(c *gin.Context) {
   createdAnimal, err := addAnimal(newAnimal)
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
+    return
   }
 
   c.IndentedJSON(http.StatusCreated, createdAnimal)
@@ -51,14 +57,15 @@ func UpdateAnimal(c *gin.Context) {
   var newAnimal model.Animal
 
   if jsonErr := c.BindJSON(&newAnimal); jsonErr != nil {
-    fmt.Println("error ")
-    c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Incorrect input data"})
+    log.Println("error")
+    c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": "Incorrect input data"})
     return
   }
   
   updatedAnimal, err := updateAnimal(newAnimal)
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
+    return
   }
 
   c.IndentedJSON(http.StatusOK, updatedAnimal)
@@ -67,12 +74,13 @@ func UpdateAnimal(c *gin.Context) {
 func DeleteAnimalById(c *gin.Context) {
   id := c.Param("id")
   if id == "" {
-     c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID in path"})
-    return
+     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID in path"})
+     return
   }
   _, err := deleteAnimal(id)
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
+    return
   }
 
   c.IndentedJSON(http.StatusOK, gin.H{"message": "Animal deleted"})

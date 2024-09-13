@@ -10,8 +10,9 @@ TODO:
 - [X] CRUD
 - [X] Simple error handling
 - [X] Split into Controller, Service and Repository layer
-- [X] **WIP** MySql handling
-- [ ] Logging user proper logger
+- [X] MySql handling
+- [X] Logging user proper logger
+- [ ] Move JSON/REST responsibilities to Controller; split main.go and controller
 - [ ] setup some configuration file
 - [ ] create CLI tool to run service and tests
 - [ ] simple unit testing
@@ -39,6 +40,3 @@ And finially run: `go run .`
 | curl -X DELETE http://localhost:8080/animal/<id> | delete animal from list |
 | curl -X POST -H "Content-Type: application/json" --data '{"name": "Test", "age":0, "id": "00000000-0000-0000-0000-000000000001"}' http://localhost:8080/animal | create new animal |
 | curl -X PUT -H "Content-Type: application/json" --data '{"name": "Test", "age":0, "id": "<existing ID>"}' http://localhost:8080/animal | update existing animal |
-
-### To fix:
-- [ ] Fix PUT endpoint

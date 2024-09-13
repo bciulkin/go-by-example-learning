@@ -1,11 +1,12 @@
 package domain
 
 import (
-  "fmt"
+  "log"
   "os"
   "database/sql"
   "go-by-example/model"
   "github.com/go-sql-driver/mysql"
+  "fmt"
 )
 
 var db *sql.DB
@@ -25,31 +26,31 @@ func ConnectToDb() {
   var err error
   db, err = sql.Open("mysql", cfg.FormatDSN())
   if err != nil {
-    fmt.Println(err)
+    log.Println(err)
   }
 
   pingErr := db.Ping()
   if pingErr != nil {
-    fmt.Println(pingErr)
+    log.Println(pingErr)
   }
-  fmt.Println("Connected to DB")
+  log.Println("Connected to DB")
 }
 
-func getAllAnimals() []model.Animal {
+func getAllAnimals() ([]model.Animal, error) {
   var animals []model.Animal
   rows, err := db.Query("SELECT * FROM animal")
   if err != nil {
-    fmt.Println(err)
+    return animals, fmt.Errorf("getAllAnimals: %v", err)
   }
   defer rows.Close()
   for rows.Next() {
     var animal model.Animal
     if err := rows.Scan(&animal.Id, &animal.Name, &animal.Age); err != nil {
-      fmt.Println(err)
+      return animals, fmt.Errorf("getAllAnimals: %v", err)
     }
     animals = append(animals, animal)
   }
-  return animals
+  return animals, nil
 }
 
 func getAnimalById(id string) (model.Animal, error) {
@@ -58,9 +59,9 @@ func getAnimalById(id string) (model.Animal, error) {
   row := db.QueryRow("SELECT * FROM animal WHERE id = ?", id)
   if err := row.Scan(&animal.Id, &animal.Name, &animal.Age); err != nil {
     if err == sql.ErrNoRows {
-      return animal, fmt.Errorf("Animal with ID %d not fuund", id)
+      return animal, fmt.Errorf("Animal with ID not found: %s", id)
     } else {
-      fmt.Println(err)
+      log.Println(err)
     }
   }
   return animal, nil
