@@ -50,27 +50,18 @@ func CreateAnimal(c *gin.Context) {
 func UpdateAnimal(c *gin.Context) {
   var newAnimal model.Animal
 
-  fmt.Println(newAnimal)
-  fmt.Println(c.BindJSON(&newAnimal))
-  if err := c.BindJSON(&newAnimal); err != nil {
+  if jsonErr := c.BindJSON(&newAnimal); jsonErr != nil {
     fmt.Println("error ")
     c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Incorrect input data"})
     return
   }
-
-  for i, animal := range staticAnimals {
-    fmt.Println(animal)
-    if animal.Id == newAnimal.Id {
-      fmt.Println("weszlo")
-      staticAnimals = append(staticAnimals[:i], staticAnimals[i+1:]...) // delete animal by slicing
-      staticAnimals = append(staticAnimals, newAnimal) // add updated animal  TODO: investigate how to update it in one line
-
-      c.IndentedJSON(http.StatusOK, newAnimal)
-      return
-    }
+  
+  updatedAnimal, err := updateAnimal(newAnimal)
+  if err != nil {
+    c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
   }
 
-  c.JSON(http.StatusNotFound, gin.H{"errorMessage": "Animal with given ID not found"})
+  c.IndentedJSON(http.StatusOK, updatedAnimal)
 }
 
 func DeleteAnimalById(c *gin.Context) {
@@ -79,11 +70,10 @@ func DeleteAnimalById(c *gin.Context) {
      c.JSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID in path"})
     return
   }
-
-  for i, animal := range staticAnimals {
-    if (animal.Id).String() == id {
-      staticAnimals = append(staticAnimals[:i], staticAnimals[i+1:]...) // delete animal by slicing
-      c.IndentedJSON(http.StatusOK, gin.H{"message": "Animal deleted"})
-    }
+  _, err := deleteAnimal(id)
+  if err != nil {
+    c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
   }
+
+  c.IndentedJSON(http.StatusOK, gin.H{"message": "Animal deleted"})
 }

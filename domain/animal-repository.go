@@ -75,3 +75,18 @@ func addAnimal(anml model.Animal) (model.Animal, error) {
   
 }
 
+func updateAnimal(anml model.Animal) (model.Animal, error) {
+  _, err := db.Exec("UPDATE animal SET name = ?, age = ? WHERE id = ?", anml.Name, anml.Age, anml.Id)
+  if err != nil {
+    return anml, fmt.Errorf("updateAnimal: %v", err)
+  }
+  return getAnimalById(anml.Id.String())
+}
+
+func deleteAnimal(id string) (string, error) {
+  _, err := db.Exec("DELETE FROM animal WHERE id = ?", id)
+  if err != nil {
+    return id, fmt.Errorf("deleteAnimal: %v", err)
+  }
+  return id, nil
+}
