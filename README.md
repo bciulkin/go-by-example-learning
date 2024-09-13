@@ -16,6 +16,7 @@ TODO:
 - [ ] setup some configuration file
 - [ ] create CLI tool to run service and tests
 - [ ] simple unit testing
+- [ ] API versioning (look gin documentation)
 - [ ] Authorization
 
 ### Local setup:

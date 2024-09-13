@@ -7,11 +7,7 @@ import (
   "go-by-example/model"
 )
 
-// staticly loaded data
-var staticAnimals = []model.Animal{model.NewAnimal("Salsa", 4), model.NewAnimal("Wegorz", 2), model.NewAnimal("Krewetka", 5)}
-
 func GetAnimals(c *gin.Context) {
-
   animals, err := getAllAnimals()
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})

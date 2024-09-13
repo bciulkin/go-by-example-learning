@@ -17,7 +17,6 @@ func main() {
   router.DELETE("/animal/:id", domain.DeleteAnimalById)
   router.PUT("/animal", domain.UpdateAnimal)
 
+  log.Println("App has started. About to start serving REST API.")
   router.Run("localhost:8080")
-
-  log.Println("App has started")
 }
