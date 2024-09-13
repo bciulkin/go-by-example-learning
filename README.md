@@ -9,7 +9,7 @@ TODO:
 - [X] JSON handling
 - [X] CRUD
 - [X] Simple error handling
-- [X] **WIP** Split into Controller, Service and Repository layer
+- [X] Split into Controller, Service and Repository layer
 - [X] **WIP** MySql handling
 - [ ] Logging user proper logger
 - [ ] setup some configuration file
