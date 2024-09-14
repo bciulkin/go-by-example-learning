@@ -12,7 +12,7 @@ TODO:
 - [X] Split into Controller, Service and Repository layer
 - [X] MySql handling
 - [X] Logging user proper logger
-- [ ] Move JSON/REST responsibilities to Controller; split main.go and controller
+- [X] Move JSON/REST responsibilities to Controller; split main.go and controller
 - [ ] setup some configuration file
 - [ ] create CLI tool to run service and tests
 - [ ] simple unit testing
