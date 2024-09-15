@@ -1,0 +1,53 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/bartek/Projects/go-by-example/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+AddAnimal	domain/animal-serivce.go	/^func AddAnimal(newAnimal model.Animal) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
+Age	model/model.go	/^  Age int       `json:"age"`$/;"	m	struct:model.Animal	typeref:typename:int
+Animal	model/model.go	/^  Animal Animal$/;"	m	struct:model.Cat	typeref:typename:Animal
+Animal	model/model.go	/^type Animal struct {$/;"	s	package:model
+CanMew	model/model.go	/^  CanMew bool$/;"	m	struct:model.Cat	typeref:typename:bool
+Cat	model/model.go	/^type Cat struct {$/;"	s	package:model
+ConnectToDb	domain/animal-repository.go	/^func ConnectToDb() {$/;"	f	package:domain
+CreateAnimal	adapter/controller.go	/^func CreateAnimal(c *gin.Context) {$/;"	f	package:controller
+DeleteAnimal	domain/animal-serivce.go	/^func DeleteAnimal(id string) (string, error) {$/;"	f	package:domain	typeref:typename:(string, error)
+DeleteAnimalById	adapter/controller.go	/^func DeleteAnimalById(c *gin.Context) {$/;"	f	package:controller
+GetAnimalById	adapter/controller.go	/^func GetAnimalById(c *gin.Context) {$/;"	f	package:controller
+GetAnimalById	domain/animal-serivce.go	/^func GetAnimalById(id string) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
+GetAnimals	adapter/controller.go	/^func GetAnimals(c *gin.Context) {$/;"	f	package:controller
+GetAnimals	domain/animal-serivce.go	/^func GetAnimals() ([]model.Animal, error) {$/;"	f	package:domain	typeref:typename:([]model.Animal, error)
+Goal of this project is to create a CRUD app for Animal shop.	README.md	/^## Goal of this project is to create a CRUD app for Animal shop.$/;"	s	chapter:go-by-example-learning
+Id	model/model.go	/^  Id uuid.UUID  `json:"id"`$/;"	m	struct:model.Animal	typeref:typename:uuid.UUID
+Local setup:	README.md	/^### Local setup:$/;"	S	section:go-by-example-learning""Goal of this project is to create a CRUD app for Animal shop.
+Name	model/model.go	/^  Name string   `json:"name"`$/;"	m	struct:model.Animal	typeref:typename:string
+NewAnimal	model/model.go	/^func NewAnimal(name string, age int) Animal {$/;"	f	package:model	typeref:typename:Animal
+Testing with curl:	README.md	/^### Testing with curl:$/;"	S	section:go-by-example-learning""Goal of this project is to create a CRUD app for Animal shop.
+UpdateAnimal	adapter/controller.go	/^func UpdateAnimal(c *gin.Context) {$/;"	f	package:controller
+UpdateAnimal	domain/animal-serivce.go	/^func UpdateAnimal(newAnimal model.Animal) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
+addAnimal	domain/animal-repository.go	/^func addAnimal(anml model.Animal) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
+age	db_scripts/init.sql	/^  age        SMALLINT(255) NOT NULL,$/;"	E	table:animal
+animal	db_scripts/init.sql	/^CREATE TABLE animal ($/;"	t
+controller	adapter/controller.go	/^package controller$/;"	p
+db	domain/animal-repository.go	/^var db *sql.DB$/;"	v	package:domain	typeref:typename:*sql.DB
+deleteAnimal	domain/animal-repository.go	/^func deleteAnimal(id string) (string, error) {$/;"	f	package:domain	typeref:typename:(string, error)
+domain	domain/animal-repository.go	/^package domain$/;"	p
+domain	domain/animal-serivce.go	/^package domain$/;"	p
+func	.ctags	/^--regex-golang=\/func([ \\t]+\\([^)]+\\))?[ \\t]+([a-zA-Z0-9_]+)\/\\2\/f,func\/$/;"	k	langdef:golang
+getAllAnimals	domain/animal-repository.go	/^func getAllAnimals() ([]model.Animal, error) {$/;"	f	package:domain	typeref:typename:([]model.Animal, error)
+getAnimalById	domain/animal-repository.go	/^func getAnimalById(id string) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
+go-by-example-learning	README.md	/^# go-by-example-learning$/;"	c
+golang	.ctags	/^--langdef=golang$/;"	l
+id	db_scripts/init.sql	/^  id         VARCHAR(36) NOT NULL,$/;"	E	table:animal
+main	main.go	/^func main() {$/;"	f	package:main
+main	main.go	/^package main$/;"	p
+model	model/model.go	/^package model$/;"	p
+name	db_scripts/init.sql	/^  name       VARCHAR(30) NOT NULL,$/;"	E	table:animal
+updateAnimal	domain/animal-repository.go	/^func updateAnimal(anml model.Animal) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
+var	.ctags	/^--regex-golang=\/var[ \\t]+([a-zA-Z_][a-zA-Z0-9_]+)\/\\1\/v,var\/$/;"	k	langdef:golang
