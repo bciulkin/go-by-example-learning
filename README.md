@@ -13,7 +13,7 @@ TODO:
 - [X] MySql handling
 - [X] Logging user proper logger
 - [X] Move JSON/REST responsibilities to Controller; split main.go and controller
-- [ ] setup some configuration file
+- [X] setup some configuration file
 - [ ] create CLI tool to run service and tests
 - [ ] simple unit testing
 - [ ] API versioning (look gin documentation)
