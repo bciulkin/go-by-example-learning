@@ -44,15 +44,17 @@ And finially run: `go run .`
 
 ### Setup CLI tool
 
-Go to cli/ and run `go build .`
+Go to cli/ and run two commands:
+1. `go build .`
+2. `mv ./serv-runner ..`
 
 ### Run with CLI (TBD) **WIP**
 
 Setup DB credentials with command:
-`./cli db setup`
+`./serv-runner db setup`
 
 Setup a server locally with:
-`./cli local`
+`./serv-runner local`
 
 Run curl tests above with:
-`./cli test`
+`./serv-runner test`
