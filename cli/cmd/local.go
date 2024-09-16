@@ -2,6 +2,7 @@ package cmd
 
 import (
   "fmt"
+  "os/exec"
   "github.com/spf13/cobra"
 )
 
@@ -15,6 +16,14 @@ var localCmd = &cobra.Command{
   Long:  `Runs go-by-example server locally.
   By default runs with MySql local default setup. More info in project's README`,
   Run: func(cmd *cobra.Command, args []string) {
-    fmt.Println("Run server locally")
+    command := exec.Command("ls")
+    stdout, err := command.Output()
+
+    if err != nil {
+      fmt.Println(err.Error())
+      return
+    }
+
+    fmt.Println(string(stdout))
   },
 }
