@@ -7,13 +7,13 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-  Use:   "serv-runner",
-  Short: "serv-runner is a simple CLI to run go-by-example project",
-  Long: `serv-runner is a simple CLI to run go-by-example project.
+  Use:   "server-runner",
+  Short: "server-runner is a simple CLI to run go-by-example project",
+  Long: `server-runner is a simple CLI to run go-by-example project.
          It provides options to run it with DB, env vars etc.
          ** WIP **`,
   Run: func(cmd *cobra.Command, args []string) {
-    // Do Stuff Here
+    fmt.Println("server-runner test")
   },
 }
 

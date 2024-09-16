@@ -14,13 +14,12 @@ TODO:
 - [X] Logging user proper logger
 - [X] Move JSON/REST responsibilities to Controller; split main.go and controller
 - [X] setup some configuration file
-- [ ] create CLI tool to run service and tests
+- [ ] **WIP** create CLI tool to run service and tests
 - [ ] simple unit testing
 - [ ] API versioning (look gin documentation)
 - [ ] Authorization
 
 ### Local setup:
-
 
 Run commands: 
 `msql` -> `use animals;` -> `source db_scripts/init.sql` to initilize DB
