@@ -2,16 +2,13 @@ package domain
 
 import (
   "log"
-  "os"
   "database/sql"
   "github.com/go-sql-driver/mysql"
 )
 
 var Db *sql.DB
 
-func ConnectToDb() {
-  dbUser := os.Getenv("DBUSER")
-  dbPass := os.Getenv("DBPASS")
+func ConnectToDb(dbUser string, dbPass string) {
   cfg := mysql.Config{
     // Capture connection properties.
     User: dbUser,

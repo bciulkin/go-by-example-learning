@@ -5,10 +5,15 @@ import (
   "go-by-example/adapter"
   "go-by-example/domain"
   "log"
+  "os"
 )
 
 func main() {
-  domain.ConnectToDb()
+  args := os.Args[1:]
+  dbUser := args[0]
+  dbPass := args[1]
+
+  domain.ConnectToDb(dbUser, dbPass)
 
   router := gin.Default()
   router.GET("/animal", controller.GetAnimals)
