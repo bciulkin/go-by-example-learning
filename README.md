@@ -23,13 +23,9 @@ TODO:
 
 Run commands: 
 `msql` -> `use animals;` -> `source db_scripts/init.sql` to initilize DB
-`
-export DBUSER=<dbuser>
-export DBPASS=<dbpass>
-`
-To initlize env variables
 
 And finially run: `go run .`
+Or use CLI tool after setup below.
 
 ### Testing with curl:
 
