@@ -4,7 +4,7 @@
 
 TODO:
 - [X] Animal structure
-- [ ] Inheritance structure with Dog and Cat structure
+- [ ] **IS it possible?** Inheritance structure with Dog and Cat structure
 - [X] Http server
 - [X] JSON handling
 - [X] CRUD
@@ -40,17 +40,23 @@ Or use CLI tool after setup below.
 
 ### Setup CLI tool
 
-Go to cli/ and run two commands:
-1. `go build .`
-2. `mv ./serv-runner ..`
+`serv-runner` file is already present in main directory ready to use.
+
+However, if you are willing to change something feel free to change files in `cli/` folder.
+To build it and use, simply run:
+
+`go build . ; mv ./serv-runner ..`
 
 ### Run with CLI (TBD) **WIP**
 
 Setup DB credentials with command:
-`./serv-runner db setup`
+
+`./serv-runner db-setup` (**WIP**)
 
 Setup a server locally with:
-`./serv-runner local`
+
+`./serv-runner local` (**WIP**)
 
 Run curl tests above with:
-`./serv-runner test`
+
+`./serv-runner test` (**TBD**)
