@@ -2,9 +2,8 @@
 
 ## Goal of this project is to create a CRUD app for Animal shop.
 
-TODO:
+## Planing on doing/done:
 - [X] Animal structure
-- [ ] **IS it possible?** Inheritance structure with Dog and Cat structure
 - [X] Http server
 - [X] JSON handling
 - [X] CRUD
@@ -19,13 +18,23 @@ TODO:
 - [ ] API versioning (look gin documentation)
 - [ ] Authorization
 
+#### Open questions:
+- [ ] **IS it possible?** Inheritance structure with Dog and Cat structure
+
 ### Local setup:
 
+Use predefined CLI tool, which is intented way by devs.
+Run commands:
+`./serv-runner db-setup`
+
+And:
+`./serv-runner local`
+
+Or use manual commands:
 Run commands: 
 `msql` -> `use animals;` -> `source db_scripts/init.sql` to initilize DB
 
-And finially run: `go run .`
-Or use CLI tool after setup below.
+And finially run: `go run . <db user> <db password>`
 
 ### Testing with curl:
 
