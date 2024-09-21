@@ -16,7 +16,7 @@ var dbSetupCmd = &cobra.Command{
   Long:  `Run db-setup in order to initlize DB required for running server locally.
   By default runs with MySql local default setup. More info in project's README`,
   Run: func(cmd *cobra.Command, args []string) {
-    command := exec.Command("mysql", "-u", "root", "-pnew-password", "animals", "<", "./db_scripts/init.sql")
+    command := exec.Command("mysql", "-u", "root", "-pnew-password", "animals", "-e", "source ./db_scripts/init.sql")
     stdout, err := command.Output()
 
     if err != nil {
@@ -24,7 +24,6 @@ var dbSetupCmd = &cobra.Command{
       return
     }
 
-    log.Println(string(stdout))
-
+    log.Println("DB reseted. " + string(stdout))
   },
 }

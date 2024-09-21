@@ -14,7 +14,7 @@ TODO:
 - [X] Logging user proper logger
 - [X] Move JSON/REST responsibilities to Controller; split main.go and controller
 - [X] setup some configuration file
-- [ ] **WIP** create CLI tool to run service and tests
+- [X] create CLI tool to run service and tests
 - [ ] simple unit testing
 - [ ] API versioning (look gin documentation)
 - [ ] Authorization
@@ -51,12 +51,12 @@ To build it and use, simply run:
 
 Setup DB credentials with command:
 
-`./serv-runner db-setup` (**WIP**)
+`./serv-runner db-setup`
 
 Setup a server locally with:
 
-`./serv-runner local` (**WIP**)
+`./serv-runner local`
 
 Run curl tests above with:
 
-`./serv-runner test` (**TBD**)
+`./serv-runner test` (**TBD: Tests are not in place yet**)
