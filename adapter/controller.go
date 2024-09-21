@@ -1,7 +1,6 @@
 package controller
 
 import (
-  "log"
   "github.com/gin-gonic/gin"
   "net/http"
   "go-by-example/model"
@@ -39,6 +38,7 @@ func CreateAnimal(c *gin.Context) {
   var newAnimal model.Animal
 
   if err := c.BindJSON(&newAnimal); err != nil {
+     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": "Incorrect input data"})
     return
   }
 
@@ -55,7 +55,6 @@ func UpdateAnimal(c *gin.Context) {
   var newAnimal model.Animal
 
   if jsonErr := c.BindJSON(&newAnimal); jsonErr != nil {
-    log.Println("error")
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": "Incorrect input data"})
     return
   }
