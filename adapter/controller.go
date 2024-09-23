@@ -7,8 +7,11 @@ import (
   "go-by-example/domain"
 )
 
+var repository = domain.NewAnimalRepository()
+var service = domain.NewAnimalService(repository)
+
 func GetAnimals(c *gin.Context) {
-  animals, err := domain.GetAnimals()
+  animals, err := service.GetAnimals()
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
     return
@@ -24,7 +27,7 @@ func GetAnimalById(c *gin.Context) {
     return
   }
 
-  animal, err := domain.GetAnimalById(id)
+  animal, err := service.GetAnimalById(id)
   if err != nil {
     c.IndentedJSON(http.StatusNotFound, gin.H{"errorMessage": "Animal with given ID not found"})
     return
@@ -42,7 +45,7 @@ func CreateAnimal(c *gin.Context) {
     return
   }
 
-  createdAnimal, err := domain.AddAnimal(newAnimal)
+  createdAnimal, err := service.AddAnimal(newAnimal)
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
     return
@@ -59,7 +62,7 @@ func UpdateAnimal(c *gin.Context) {
     return
   }
   
-  updatedAnimal, err := domain.UpdateAnimal(newAnimal)
+  updatedAnimal, err := service.UpdateAnimal(newAnimal)
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
     return
@@ -74,7 +77,7 @@ func DeleteAnimalById(c *gin.Context) {
      c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID in path"})
      return
   }
-  _, err := domain.DeleteAnimal(id)
+  _, err := service.DeleteAnimal(id)
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
     return

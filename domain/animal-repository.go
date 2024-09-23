@@ -7,7 +7,22 @@ import (
   "fmt"
 )
 
-func getAllAnimals() ([]model.Animal, error) {
+type AnimalRepository interface {
+  GetAllAnimals() ([]model.Animal, error)
+  GetAnimalById(id string) (model.Animal, error)
+  AddAnimal(anml model.Animal) (model.Animal, error)
+  UpdateAnimal(anml model.Animal) (model.Animal, error)
+  DeleteAnimal(id string) (string, error)
+}
+
+type animalRepository struct {
+}
+
+func NewAnimalRepository() AnimalRepository {
+  return &animalRepository{}
+}
+
+func (repository *animalRepository) GetAllAnimals() ([]model.Animal, error) {
   var animals []model.Animal
   rows, err := Db.Query("SELECT * FROM animal")
   if err != nil {
@@ -24,7 +39,7 @@ func getAllAnimals() ([]model.Animal, error) {
   return animals, nil
 }
 
-func getAnimalById(id string) (model.Animal, error) {
+func (repository *animalRepository) GetAnimalById(id string) (model.Animal, error) {
   var animal model.Animal
 
   row := Db.QueryRow("SELECT * FROM animal WHERE id = ?", id)
@@ -38,24 +53,24 @@ func getAnimalById(id string) (model.Animal, error) {
   return animal, nil
 }
 
-func addAnimal(anml model.Animal) (model.Animal, error) {
+func (repository *animalRepository) AddAnimal(anml model.Animal) (model.Animal, error) {
   _, err := Db.Exec("INSERT INTO animal (id, name, age) VALUES (?, ?, ?)", anml.Id, anml.Name, anml.Age)
   if err != nil {
     return anml, fmt.Errorf("addAnimal: %v", err)
   }
-  return getAnimalById(anml.Id.String())
+  return repository.GetAnimalById(anml.Id.String())
   
 }
 
-func updateAnimal(anml model.Animal) (model.Animal, error) {
+func (repository *animalRepository) UpdateAnimal(anml model.Animal) (model.Animal, error) {
   _, err := Db.Exec("UPDATE animal SET name = ?, age = ? WHERE id = ?", anml.Name, anml.Age, anml.Id)
   if err != nil {
     return anml, fmt.Errorf("updateAnimal: %v", err)
   }
-  return getAnimalById(anml.Id.String())
+  return repository.GetAnimalById(anml.Id.String())
 }
 
-func deleteAnimal(id string) (string, error) {
+func (repository *animalRepository) DeleteAnimal(id string) (string, error) {
   _, err := Db.Exec("DELETE FROM animal WHERE id = ?", id)
   if err != nil {
     return id, fmt.Errorf("deleteAnimal: %v", err)
