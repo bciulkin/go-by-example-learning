@@ -1,4 +1,4 @@
-package controller
+package adapter
 
 import (
   "github.com/gin-gonic/gin"
@@ -7,10 +7,28 @@ import (
   "go-by-example/domain"
 )
 
+type AnimalController interface {
+  GetAnimals(u *gin.Context)
+  GetAnimalById(u *gin.Context)
+  CreateAnimal(u *gin.Context)
+  UpdateAnimal(u *gin.Context)
+  DeleteAnimalById(u *gin.Context)
+}
+
+type animalController struct {
+  AnimalService domain.AnimalService
+}
+
+func NewAnimalController(animalService domain.AnimalService) AnimalController {
+  return &animalController{
+    AnimalService: animalService,
+  }
+}
+
 var repository = domain.NewAnimalRepository()
 var service = domain.NewAnimalService(repository)
 
-func GetAnimals(c *gin.Context) {
+func (controller *animalController) GetAnimals(c *gin.Context) {
   animals, err := service.GetAnimals()
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
@@ -20,7 +38,7 @@ func GetAnimals(c *gin.Context) {
   c.IndentedJSON(http.StatusOK, animals)
 }
 
-func GetAnimalById(c *gin.Context) {
+func (controller *animalController) GetAnimalById(c *gin.Context) {
   id := c.Param("id")
   if id == "" {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID path parameter"})
@@ -36,7 +54,7 @@ func GetAnimalById(c *gin.Context) {
   c.IndentedJSON(http.StatusOK, animal)
 }
 
-func CreateAnimal(c *gin.Context) {
+func (controller *animalController) CreateAnimal(c *gin.Context) {
 
   var newAnimal model.Animal
 
@@ -54,7 +72,7 @@ func CreateAnimal(c *gin.Context) {
   c.IndentedJSON(http.StatusCreated, createdAnimal)
 }
 
-func UpdateAnimal(c *gin.Context) {
+func (controller *animalController) UpdateAnimal(c *gin.Context) {
   var newAnimal model.Animal
 
   if jsonErr := c.BindJSON(&newAnimal); jsonErr != nil {
@@ -71,7 +89,7 @@ func UpdateAnimal(c *gin.Context) {
   c.IndentedJSON(http.StatusOK, updatedAnimal)
 }
 
-func DeleteAnimalById(c *gin.Context) {
+func (controller *animalController) DeleteAnimalById(c *gin.Context) {
   id := c.Param("id")
   if id == "" {
      c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID in path"})

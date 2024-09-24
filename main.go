@@ -15,6 +15,10 @@ func main() {
 
   domain.ConnectToDb(dbUser, dbPass)
 
+  repository := domain.NewAnimalRepository()
+  service := domain.NewAnimalService(repository)
+  controller := adapter.NewAnimalController(service)
+
   router := gin.Default()
   router.GET("/animal", controller.GetAnimals)
   router.GET("/animal/:id", controller.GetAnimalById)
