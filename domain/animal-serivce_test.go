@@ -4,6 +4,7 @@ import (
   "testing"
   "go-by-example/model"
   "github.com/google/uuid"
+  "github.com/google/go-cmp/cmp"
 )
 
 func TestGetAnimals(t *testing.T) {
@@ -27,7 +28,7 @@ func TestGetAnimals(t *testing.T) {
     },
   }
 
-  if got[0] != want[0] {
+  if cmp.Equal(got, want) {
     t.Errorf("got %q wanted %q", got, want)
   }
 }
