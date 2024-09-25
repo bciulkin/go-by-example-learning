@@ -6,9 +6,8 @@ import (
   "github.com/go-sql-driver/mysql"
 )
 
-var Db *sql.DB
 
-func ConnectToDb(dbUser string, dbPass string) {
+func ConnectToDb(dbUser string, dbPass string) (*sql.DB) {
   cfg := mysql.Config{
     // Capture connection properties.
     User: dbUser,
@@ -17,17 +16,18 @@ func ConnectToDb(dbUser string, dbPass string) {
     Addr:   "127.0.0.1:3306",
     DBName: "animals",
   }
+
   // Get a database handle.
-  var err error
-  Db, err = sql.Open("mysql", cfg.FormatDSN())
+  db, err := sql.Open("mysql", cfg.FormatDSN())
   if err != nil {
     log.Println(err)
   }
 
-  pingErr := Db.Ping()
+  pingErr := db.Ping()
   if pingErr != nil {
     log.Println(pingErr)
   }
   log.Println("Connected to DB")
+  return db
 }
 

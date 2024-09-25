@@ -13,9 +13,9 @@ func main() {
   dbUser := args[0]
   dbPass := args[1]
 
-  domain.ConnectToDb(dbUser, dbPass)
+  db := domain.ConnectToDb(dbUser, dbPass)
 
-  repository := domain.NewAnimalRepository()
+  repository := domain.NewAnimalRepository(db)
   service := domain.NewAnimalService(repository)
   controller := adapter.NewAnimalController(service)
 

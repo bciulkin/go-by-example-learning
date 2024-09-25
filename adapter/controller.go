@@ -16,20 +16,17 @@ type AnimalController interface {
 }
 
 type animalController struct {
-  AnimalService domain.AnimalService
+  animalService domain.AnimalService
 }
 
 func NewAnimalController(animalService domain.AnimalService) AnimalController {
   return &animalController{
-    AnimalService: animalService,
+    animalService: animalService,
   }
 }
 
-var repository = domain.NewAnimalRepository()
-var service = domain.NewAnimalService(repository)
-
 func (controller *animalController) GetAnimals(c *gin.Context) {
-  animals, err := service.GetAnimals()
+  animals, err := controller.animalService.GetAnimals()
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
     return
@@ -45,7 +42,7 @@ func (controller *animalController) GetAnimalById(c *gin.Context) {
     return
   }
 
-  animal, err := service.GetAnimalById(id)
+  animal, err := controller.animalService.GetAnimalById(id)
   if err != nil {
     c.IndentedJSON(http.StatusNotFound, gin.H{"errorMessage": "Animal with given ID not found"})
     return
@@ -63,7 +60,7 @@ func (controller *animalController) CreateAnimal(c *gin.Context) {
     return
   }
 
-  createdAnimal, err := service.AddAnimal(newAnimal)
+  createdAnimal, err := controller.animalService.AddAnimal(newAnimal)
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
     return
@@ -80,7 +77,7 @@ func (controller *animalController) UpdateAnimal(c *gin.Context) {
     return
   }
   
-  updatedAnimal, err := service.UpdateAnimal(newAnimal)
+  updatedAnimal, err := controller.animalService.UpdateAnimal(newAnimal)
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
     return
@@ -95,7 +92,7 @@ func (controller *animalController) DeleteAnimalById(c *gin.Context) {
      c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": "Missing ID in path"})
      return
   }
-  _, err := service.DeleteAnimal(id)
+  _, err := controller.animalService.DeleteAnimal(id)
   if err != nil {
     c.IndentedJSON(http.StatusBadRequest, gin.H{"errorMessage": err})
     return

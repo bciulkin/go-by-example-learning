@@ -18,15 +18,18 @@ type AnimalRepository interface {
 }
 
 type animalRepository struct {
+  Database *sql.DB
 }
 
-func NewAnimalRepository() AnimalRepository {
-  return &animalRepository{}
+func NewAnimalRepository(database *sql.DB) AnimalRepository {
+  return &animalRepository{
+    Database: database,
+  }
 }
 
 func (repository *animalRepository) GetAllAnimals() ([]model.Animal, error) {
   var animals []model.Animal
-  rows, err := Db.Query("SELECT * FROM animal")
+  rows, err := repository.Database.Query("SELECT * FROM animal")
   if err != nil {
     return animals, fmt.Errorf("getAllAnimals: %v", err)
   }
@@ -44,7 +47,7 @@ func (repository *animalRepository) GetAllAnimals() ([]model.Animal, error) {
 func (repository *animalRepository) GetAnimalById(id string) (model.Animal, error) {
   var animal model.Animal
 
-  row := Db.QueryRow("SELECT * FROM animal WHERE id = ?", id)
+  row := repository.Database.QueryRow("SELECT * FROM animal WHERE id = ?", id)
   if err := row.Scan(&animal.Id, &animal.Name, &animal.Age); err != nil {
     if err == sql.ErrNoRows {
       return animal, fmt.Errorf("Animal with ID not found: %s", id)
@@ -56,7 +59,7 @@ func (repository *animalRepository) GetAnimalById(id string) (model.Animal, erro
 }
 
 func (repository *animalRepository) AddAnimal(anml model.Animal) (model.Animal, error) {
-  _, err := Db.Exec("INSERT INTO animal (id, name, age) VALUES (?, ?, ?)", anml.Id, anml.Name, anml.Age)
+  _, err := repository.Database.Exec("INSERT INTO animal (id, name, age) VALUES (?, ?, ?)", anml.Id, anml.Name, anml.Age)
   if err != nil {
     return anml, fmt.Errorf("addAnimal: %v", err)
   }
@@ -65,7 +68,7 @@ func (repository *animalRepository) AddAnimal(anml model.Animal) (model.Animal, 
 }
 
 func (repository *animalRepository) UpdateAnimal(anml model.Animal) (model.Animal, error) {
-  _, err := Db.Exec("UPDATE animal SET name = ?, age = ? WHERE id = ?", anml.Name, anml.Age, anml.Id)
+  _, err := repository.Database.Exec("UPDATE animal SET name = ?, age = ? WHERE id = ?", anml.Name, anml.Age, anml.Id)
   if err != nil {
     return anml, fmt.Errorf("updateAnimal: %v", err)
   }
@@ -73,7 +76,7 @@ func (repository *animalRepository) UpdateAnimal(anml model.Animal) (model.Anima
 }
 
 func (repository *animalRepository) DeleteAnimal(id string) (string, error) {
-  _, err := Db.Exec("DELETE FROM animal WHERE id = ?", id)
+  _, err := repository.Database.Exec("DELETE FROM animal WHERE id = ?", id)
   if err != nil {
     return id, fmt.Errorf("deleteAnimal: %v", err)
   }

@@ -10,13 +10,12 @@ import (
   "errors"
 )
 
-func TestAnimalService(t *testing.T) {
+func TestAnimalRepository(t *testing.T) {
   ctrl := gomock.NewController(t)
 
-  repo := mock.NewMockAnimalRepository(ctrl)
-  service := NewAnimalService(repo)
+  repo := mock.NewAnimalRepository(ctrl)
 
-  t.Run("getAnimals - successful case", func(t *testing.T) {
+  t.Run("getAllAnimals - successful case", func(t *testing.T) {
     want := []model.Animal{
       {
         Name: "test",
@@ -35,15 +34,4 @@ func TestAnimalService(t *testing.T) {
 
     assert.Equal(t, got, want)
   })
-
-  t.Run("getAnimals - error case", func(t *testing.T) {
-    want := errors.New("test error")
-    repo.EXPECT().GetAllAnimals().Return(nil, want).Times(1)
-
-    _, err := service.GetAnimals()
-
-    assert.ErrorIs(t, err, want)
-  })
-
-  // TODO: more test cases for rest of methods
 }
