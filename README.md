@@ -25,13 +25,16 @@
 
 Use predefined CLI tool, which is intented way by devs.
 Run commands:
+
 `./serv-runner db-setup`
 
 And:
+
 `./serv-runner local`
 
 Or use manual commands:
 Run commands: 
+
 `msql` -> `use animals;` -> `source db_scripts/init.sql` to initilize DB
 
 And finially run: `go run . <db user> <db password>`
@@ -69,3 +72,14 @@ Setup a server locally with:
 Run curl tests above with:
 
 `./serv-runner test` (**TBD: Tests are not in place yet**)
+
+### Generate mocks and run tests
+Run command:
+
+`go generate -v ./...`
+
+**TODO** serv-runner CLI command
+
+Run tests command:
+
+`go test -v ./...`

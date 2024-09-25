@@ -7,6 +7,8 @@ import (
   "fmt"
 )
 
+//go:generate mockgen -source=animal-repository.go -destination=mock/animal-repository.go
+
 type AnimalRepository interface {
   GetAllAnimals() ([]model.Animal, error)
   GetAnimalById(id string) (model.Animal, error)

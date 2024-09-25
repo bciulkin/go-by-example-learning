@@ -4,6 +4,8 @@ import (
   "go-by-example/model"
 )
 
+//go:generate mockgen -source=animal-service.go -destination=mock/animal-service.go
+
 type AnimalService interface {
   GetAnimals() ([]model.Animal, error)
   GetAnimalById(id string) (model.Animal, error)
