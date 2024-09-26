@@ -13,7 +13,11 @@ var rootCmd = &cobra.Command{
          It provides options to run it with DB, env vars etc.
          ** WIP **`,
   Run: func(cmd *cobra.Command, args []string) {
-    fmt.Println("server-runner test")
+    fmt.Println("This is CLI for go-by-example project\n" +
+      "Try running one of commands:\n" +
+      "serv-runner db-setup\n" +
+      "serv-runner test (TBD)\n" +
+      "serv-runner local\n")
   },
 }
 

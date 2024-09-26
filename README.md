@@ -14,7 +14,8 @@
 - [X] Move JSON/REST responsibilities to Controller; split main.go and controller
 - [X] setup some configuration file
 - [X] create CLI tool to run service and tests
-- [ ] simple unit testing
+- [X] sample unit tests for repo and service layer
+- [ ] sample unit tests for controller layer
 - [ ] API versioning (look gin documentation)
 - [ ] Authorization
 
@@ -74,6 +75,7 @@ Run curl tests above with:
 `./serv-runner test` (**TBD: Tests are not in place yet**)
 
 ### Generate mocks and run tests
+
 Run command:
 
 `go generate -v ./...`
@@ -83,3 +85,7 @@ Run command:
 Run tests command:
 
 `go test -v ./...`
+
+### Generate tags required required for navigating in Neovim
+
+`ctags --recurse=yes --exclude=.git`

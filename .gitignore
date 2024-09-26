@@ -1,3 +1,6 @@
 go-by-example
-app.log
+rest/go-by-example
+main
+rest/main
 
+rest/app.log

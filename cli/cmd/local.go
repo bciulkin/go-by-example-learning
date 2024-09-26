@@ -17,7 +17,7 @@ var localCmd = &cobra.Command{
   Long:  `Runs go-by-example server locally.
   By default runs with MySql local default setup. More info in project's README`,
   Run: func(cmd *cobra.Command, args []string) {
-    command := exec.Command("go", "run", "main.go", "root", "new-password", "&")
+    command := exec.Command("go", "run", "rest/main.go", "root", "new-password", "&")
 
     outfile, ioerr := os.Create("./app.log")
     if ioerr != nil {
