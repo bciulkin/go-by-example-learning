@@ -9,45 +9,139 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	5.9.0	//
-AddAnimal	domain/animal-serivce.go	/^func AddAnimal(newAnimal model.Animal) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
+AddAnimal	domain/animal-repository.go	/^  AddAnimal(anml model.Animal) (model.Animal, error)$/;"	n	interface:domain.AnimalRepository	typeref:typename:(model.Animal, error)
+AddAnimal	domain/animal-repository.go	/^func (repository *animalRepository) AddAnimal(anml model.Animal) (model.Animal, error) {$/;"	f	struct:domain.animalRepository	typeref:typename:(model.Animal, error)
+AddAnimal	domain/animal-service.go	/^  AddAnimal(newAnimal model.Animal) (model.Animal, error)$/;"	n	interface:domain.AnimalService	typeref:typename:(model.Animal, error)
+AddAnimal	domain/animal-service.go	/^func (service *animalService) AddAnimal(newAnimal model.Animal) (model.Animal, error) {$/;"	f	struct:domain.animalService	typeref:typename:(model.Animal, error)
+AddAnimal	domain/mock/animal-repository.go	/^func (m *MockAnimalRepository) AddAnimal(anml model.Animal) (model.Animal, error) {$/;"	f	struct:mock_domain.MockAnimalRepository	typeref:typename:(model.Animal, error)
+AddAnimal	domain/mock/animal-repository.go	/^func (mr *MockAnimalRepositoryMockRecorder) AddAnimal(anml interface{}) *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalRepositoryMockRecorder	typeref:typename:*gomock.Call
+AddAnimal	domain/mock/animal-service.go	/^func (m *MockAnimalService) AddAnimal(newAnimal model.Animal) (model.Animal, error) {$/;"	f	struct:mock_domain.MockAnimalService	typeref:typename:(model.Animal, error)
+AddAnimal	domain/mock/animal-service.go	/^func (mr *MockAnimalServiceMockRecorder) AddAnimal(newAnimal interface{}) *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalServiceMockRecorder	typeref:typename:*gomock.Call
 Age	model/model.go	/^  Age int       `json:"age"`$/;"	m	struct:model.Animal	typeref:typename:int
 Animal	model/model.go	/^  Animal Animal$/;"	m	struct:model.Cat	typeref:typename:Animal
 Animal	model/model.go	/^type Animal struct {$/;"	s	package:model
+AnimalController	adapter/controller.go	/^type AnimalController interface {$/;"	i	package:adapter
+AnimalRepository	domain/animal-repository.go	/^type AnimalRepository interface {$/;"	i	package:domain
+AnimalRepository	domain/animal-service.go	/^  AnimalRepository AnimalRepository$/;"	m	struct:domain.animalService	typeref:typename:AnimalRepository
+AnimalService	domain/animal-service.go	/^type AnimalService interface {$/;"	i	package:domain
 CanMew	model/model.go	/^  CanMew bool$/;"	m	struct:model.Cat	typeref:typename:bool
 Cat	model/model.go	/^type Cat struct {$/;"	s	package:model
-ConnectToDb	domain/animal-repository.go	/^func ConnectToDb() {$/;"	f	package:domain
-CreateAnimal	adapter/controller.go	/^func CreateAnimal(c *gin.Context) {$/;"	f	package:controller
-DeleteAnimal	domain/animal-serivce.go	/^func DeleteAnimal(id string) (string, error) {$/;"	f	package:domain	typeref:typename:(string, error)
-DeleteAnimalById	adapter/controller.go	/^func DeleteAnimalById(c *gin.Context) {$/;"	f	package:controller
-GetAnimalById	adapter/controller.go	/^func GetAnimalById(c *gin.Context) {$/;"	f	package:controller
-GetAnimalById	domain/animal-serivce.go	/^func GetAnimalById(id string) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
-GetAnimals	adapter/controller.go	/^func GetAnimals(c *gin.Context) {$/;"	f	package:controller
-GetAnimals	domain/animal-serivce.go	/^func GetAnimals() ([]model.Animal, error) {$/;"	f	package:domain	typeref:typename:([]model.Animal, error)
+ConnectToDb	domain/config.go	/^func ConnectToDb(dbUser string, dbPass string) (*sql.DB) {$/;"	f	package:domain	typeref:typename:(*sql.DB)
+CreateAnimal	adapter/controller.go	/^  CreateAnimal(u *gin.Context)$/;"	n	interface:adapter.AnimalController
+CreateAnimal	adapter/controller.go	/^func (controller *animalController) CreateAnimal(c *gin.Context) {$/;"	f	struct:adapter.animalController
+Database	domain/animal-repository.go	/^  Database *sql.DB$/;"	m	struct:domain.animalRepository	typeref:typename:*sql.DB
+DeleteAnimal	domain/animal-repository.go	/^  DeleteAnimal(id string) (string, error)$/;"	n	interface:domain.AnimalRepository	typeref:typename:(string, error)
+DeleteAnimal	domain/animal-repository.go	/^func (repository *animalRepository) DeleteAnimal(id string) (string, error) {$/;"	f	struct:domain.animalRepository	typeref:typename:(string, error)
+DeleteAnimal	domain/animal-service.go	/^  DeleteAnimal(id string) (string, error)$/;"	n	interface:domain.AnimalService	typeref:typename:(string, error)
+DeleteAnimal	domain/animal-service.go	/^func (service *animalService) DeleteAnimal(id string) (string, error) {$/;"	f	struct:domain.animalService	typeref:typename:(string, error)
+DeleteAnimal	domain/mock/animal-repository.go	/^func (m *MockAnimalRepository) DeleteAnimal(id string) (string, error) {$/;"	f	struct:mock_domain.MockAnimalRepository	typeref:typename:(string, error)
+DeleteAnimal	domain/mock/animal-repository.go	/^func (mr *MockAnimalRepositoryMockRecorder) DeleteAnimal(id interface{}) *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalRepositoryMockRecorder	typeref:typename:*gomock.Call
+DeleteAnimal	domain/mock/animal-service.go	/^func (m *MockAnimalService) DeleteAnimal(id string) (string, error) {$/;"	f	struct:mock_domain.MockAnimalService	typeref:typename:(string, error)
+DeleteAnimal	domain/mock/animal-service.go	/^func (mr *MockAnimalServiceMockRecorder) DeleteAnimal(id interface{}) *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalServiceMockRecorder	typeref:typename:*gomock.Call
+DeleteAnimalById	adapter/controller.go	/^  DeleteAnimalById(u *gin.Context)$/;"	n	interface:adapter.AnimalController
+DeleteAnimalById	adapter/controller.go	/^func (controller *animalController) DeleteAnimalById(c *gin.Context) {$/;"	f	struct:adapter.animalController
+EXPECT	domain/mock/animal-repository.go	/^func (m *MockAnimalRepository) EXPECT() *MockAnimalRepositoryMockRecorder {$/;"	f	struct:mock_domain.MockAnimalRepository	typeref:typename:*MockAnimalRepositoryMockRecorder
+EXPECT	domain/mock/animal-service.go	/^func (m *MockAnimalService) EXPECT() *MockAnimalServiceMockRecorder {$/;"	f	struct:mock_domain.MockAnimalService	typeref:typename:*MockAnimalServiceMockRecorder
+Execute	cli/cmd/root.go	/^func Execute() {$/;"	f	package:cmd
+Generate mocks and run tests	README.md	/^### Generate mocks and run tests$/;"	S	section:go-by-example-learning""Planing on doing/done:
+GetAllAnimals	domain/animal-repository.go	/^  GetAllAnimals() ([]model.Animal, error)$/;"	n	interface:domain.AnimalRepository	typeref:typename:([]model.Animal, error)
+GetAllAnimals	domain/animal-repository.go	/^func (repository *animalRepository) GetAllAnimals() ([]model.Animal, error) {$/;"	f	struct:domain.animalRepository	typeref:typename:([]model.Animal, error)
+GetAllAnimals	domain/mock/animal-repository.go	/^func (m *MockAnimalRepository) GetAllAnimals() ([]model.Animal, error) {$/;"	f	struct:mock_domain.MockAnimalRepository	typeref:typename:([]model.Animal, error)
+GetAllAnimals	domain/mock/animal-repository.go	/^func (mr *MockAnimalRepositoryMockRecorder) GetAllAnimals() *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalRepositoryMockRecorder	typeref:typename:*gomock.Call
+GetAnimalById	adapter/controller.go	/^  GetAnimalById(u *gin.Context)$/;"	n	interface:adapter.AnimalController
+GetAnimalById	adapter/controller.go	/^func (controller *animalController) GetAnimalById(c *gin.Context) {$/;"	f	struct:adapter.animalController
+GetAnimalById	domain/animal-repository.go	/^  GetAnimalById(id string) (model.Animal, error)$/;"	n	interface:domain.AnimalRepository	typeref:typename:(model.Animal, error)
+GetAnimalById	domain/animal-repository.go	/^func (repository *animalRepository) GetAnimalById(id string) (model.Animal, error) {$/;"	f	struct:domain.animalRepository	typeref:typename:(model.Animal, error)
+GetAnimalById	domain/animal-service.go	/^  GetAnimalById(id string) (model.Animal, error)$/;"	n	interface:domain.AnimalService	typeref:typename:(model.Animal, error)
+GetAnimalById	domain/animal-service.go	/^func (service *animalService) GetAnimalById(id string) (model.Animal, error) {$/;"	f	struct:domain.animalService	typeref:typename:(model.Animal, error)
+GetAnimalById	domain/mock/animal-repository.go	/^func (m *MockAnimalRepository) GetAnimalById(id string) (model.Animal, error) {$/;"	f	struct:mock_domain.MockAnimalRepository	typeref:typename:(model.Animal, error)
+GetAnimalById	domain/mock/animal-repository.go	/^func (mr *MockAnimalRepositoryMockRecorder) GetAnimalById(id interface{}) *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalRepositoryMockRecorder	typeref:typename:*gomock.Call
+GetAnimalById	domain/mock/animal-service.go	/^func (m *MockAnimalService) GetAnimalById(id string) (model.Animal, error) {$/;"	f	struct:mock_domain.MockAnimalService	typeref:typename:(model.Animal, error)
+GetAnimalById	domain/mock/animal-service.go	/^func (mr *MockAnimalServiceMockRecorder) GetAnimalById(id interface{}) *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalServiceMockRecorder	typeref:typename:*gomock.Call
+GetAnimals	adapter/controller.go	/^  GetAnimals(u *gin.Context)$/;"	n	interface:adapter.AnimalController
+GetAnimals	adapter/controller.go	/^func (controller *animalController) GetAnimals(c *gin.Context) {$/;"	f	struct:adapter.animalController
+GetAnimals	domain/animal-service.go	/^  GetAnimals() ([]model.Animal, error)$/;"	n	interface:domain.AnimalService	typeref:typename:([]model.Animal, error)
+GetAnimals	domain/animal-service.go	/^func (service *animalService) GetAnimals() ([]model.Animal, error) {$/;"	f	struct:domain.animalService	typeref:typename:([]model.Animal, error)
+GetAnimals	domain/mock/animal-service.go	/^func (m *MockAnimalService) GetAnimals() ([]model.Animal, error) {$/;"	f	struct:mock_domain.MockAnimalService	typeref:typename:([]model.Animal, error)
+GetAnimals	domain/mock/animal-service.go	/^func (mr *MockAnimalServiceMockRecorder) GetAnimals() *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalServiceMockRecorder	typeref:typename:*gomock.Call
 Goal of this project is to create a CRUD app for Animal shop.	README.md	/^## Goal of this project is to create a CRUD app for Animal shop.$/;"	s	chapter:go-by-example-learning
 Id	model/model.go	/^  Id uuid.UUID  `json:"id"`$/;"	m	struct:model.Animal	typeref:typename:uuid.UUID
-Local setup:	README.md	/^### Local setup:$/;"	S	section:go-by-example-learning""Goal of this project is to create a CRUD app for Animal shop.
+Local setup:	README.md	/^### Local setup:$/;"	S	section:go-by-example-learning""Planing on doing/done:
+MockAnimalRepository	domain/mock/animal-repository.go	/^type MockAnimalRepository struct {$/;"	s	package:mock_domain
+MockAnimalRepositoryMockRecorder	domain/mock/animal-repository.go	/^type MockAnimalRepositoryMockRecorder struct {$/;"	s	package:mock_domain
+MockAnimalService	domain/mock/animal-service.go	/^type MockAnimalService struct {$/;"	s	package:mock_domain
+MockAnimalServiceMockRecorder	domain/mock/animal-service.go	/^type MockAnimalServiceMockRecorder struct {$/;"	s	package:mock_domain
 Name	model/model.go	/^  Name string   `json:"name"`$/;"	m	struct:model.Animal	typeref:typename:string
 NewAnimal	model/model.go	/^func NewAnimal(name string, age int) Animal {$/;"	f	package:model	typeref:typename:Animal
-Testing with curl:	README.md	/^### Testing with curl:$/;"	S	section:go-by-example-learning""Goal of this project is to create a CRUD app for Animal shop.
-UpdateAnimal	adapter/controller.go	/^func UpdateAnimal(c *gin.Context) {$/;"	f	package:controller
-UpdateAnimal	domain/animal-serivce.go	/^func UpdateAnimal(newAnimal model.Animal) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
-addAnimal	domain/animal-repository.go	/^func addAnimal(anml model.Animal) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
+NewAnimalController	adapter/controller.go	/^func NewAnimalController(animalService domain.AnimalService) AnimalController {$/;"	f	package:adapter	typeref:typename:AnimalController
+NewAnimalRepository	domain/animal-repository.go	/^func NewAnimalRepository(database *sql.DB) AnimalRepository {$/;"	f	package:domain	typeref:typename:AnimalRepository
+NewAnimalService	domain/animal-service.go	/^func NewAnimalService(animalRepository AnimalRepository) AnimalService {$/;"	f	package:domain	typeref:typename:AnimalService
+NewMockAnimalRepository	domain/mock/animal-repository.go	/^func NewMockAnimalRepository(ctrl *gomock.Controller) *MockAnimalRepository {$/;"	f	package:mock_domain	typeref:typename:*MockAnimalRepository
+NewMockAnimalService	domain/mock/animal-service.go	/^func NewMockAnimalService(ctrl *gomock.Controller) *MockAnimalService {$/;"	f	package:mock_domain	typeref:typename:*MockAnimalService
+Open questions:	README.md	/^#### Open questions:$/;"	t	section:go-by-example-learning""Planing on doing/done:
+Planing on doing/done:	README.md	/^## Planing on doing\/done:$/;"	s	chapter:go-by-example-learning
+Run with CLI (TBD) **WIP**	README.md	/^### Run with CLI (TBD) **WIP**$/;"	S	section:go-by-example-learning""Planing on doing/done:
+Setup CLI tool	README.md	/^### Setup CLI tool$/;"	S	section:go-by-example-learning""Planing on doing/done:
+TestAnimalRepository	domain/animal-repository_test.go	/^func TestAnimalRepository(t *testing.T) {$/;"	f	package:domain
+TestAnimalService	domain/animal-service_test.go	/^func TestAnimalService(t *testing.T) {$/;"	f	package:domain
+Testing with curl:	README.md	/^### Testing with curl:$/;"	S	section:go-by-example-learning""Planing on doing/done:
+UpdateAnimal	adapter/controller.go	/^  UpdateAnimal(u *gin.Context)$/;"	n	interface:adapter.AnimalController
+UpdateAnimal	adapter/controller.go	/^func (controller *animalController) UpdateAnimal(c *gin.Context) {$/;"	f	struct:adapter.animalController
+UpdateAnimal	domain/animal-repository.go	/^  UpdateAnimal(anml model.Animal) (model.Animal, error)$/;"	n	interface:domain.AnimalRepository	typeref:typename:(model.Animal, error)
+UpdateAnimal	domain/animal-repository.go	/^func (repository *animalRepository) UpdateAnimal(anml model.Animal) (model.Animal, error) {$/;"	f	struct:domain.animalRepository	typeref:typename:(model.Animal, error)
+UpdateAnimal	domain/animal-service.go	/^  UpdateAnimal(newAnimal model.Animal) (model.Animal, error)$/;"	n	interface:domain.AnimalService	typeref:typename:(model.Animal, error)
+UpdateAnimal	domain/animal-service.go	/^func (service *animalService) UpdateAnimal(newAnimal model.Animal) (model.Animal, error) {$/;"	f	struct:domain.animalService	typeref:typename:(model.Animal, error)
+UpdateAnimal	domain/mock/animal-repository.go	/^func (m *MockAnimalRepository) UpdateAnimal(anml model.Animal) (model.Animal, error) {$/;"	f	struct:mock_domain.MockAnimalRepository	typeref:typename:(model.Animal, error)
+UpdateAnimal	domain/mock/animal-repository.go	/^func (mr *MockAnimalRepositoryMockRecorder) UpdateAnimal(anml interface{}) *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalRepositoryMockRecorder	typeref:typename:*gomock.Call
+UpdateAnimal	domain/mock/animal-service.go	/^func (m *MockAnimalService) UpdateAnimal(newAnimal model.Animal) (model.Animal, error) {$/;"	f	struct:mock_domain.MockAnimalService	typeref:typename:(model.Animal, error)
+UpdateAnimal	domain/mock/animal-service.go	/^func (mr *MockAnimalServiceMockRecorder) UpdateAnimal(newAnimal interface{}) *gomock.Call {$/;"	f	struct:mock_domain.MockAnimalServiceMockRecorder	typeref:typename:*gomock.Call
+adapter	adapter/controller.go	/^package adapter$/;"	p
 age	db_scripts/init.sql	/^  age        SMALLINT(255) NOT NULL,$/;"	E	table:animal
 animal	db_scripts/init.sql	/^CREATE TABLE animal ($/;"	t
-controller	adapter/controller.go	/^package controller$/;"	p
-db	domain/animal-repository.go	/^var db *sql.DB$/;"	v	package:domain	typeref:typename:*sql.DB
-deleteAnimal	domain/animal-repository.go	/^func deleteAnimal(id string) (string, error) {$/;"	f	package:domain	typeref:typename:(string, error)
+animalController	adapter/controller.go	/^type animalController struct {$/;"	s	package:adapter
+animalRepository	domain/animal-repository.go	/^type animalRepository struct {$/;"	s	package:domain
+animalService	adapter/controller.go	/^  animalService domain.AnimalService$/;"	m	struct:adapter.animalController	typeref:typename:domain.AnimalService
+animalService	domain/animal-service.go	/^type animalService struct {$/;"	s	package:domain
+cmd	cli/cmd/db-setup.go	/^package cmd$/;"	p
+cmd	cli/cmd/local.go	/^package cmd$/;"	p
+cmd	cli/cmd/root.go	/^package cmd$/;"	p
+cmd	cli/cmd/setup.go	/^package cmd$/;"	p
+ctrl	domain/mock/animal-repository.go	/^	ctrl     *gomock.Controller$/;"	m	struct:mock_domain.MockAnimalRepository	typeref:typename:*gomock.Controller
+ctrl	domain/mock/animal-service.go	/^	ctrl     *gomock.Controller$/;"	m	struct:mock_domain.MockAnimalService	typeref:typename:*gomock.Controller
+dbSetupCmd	cli/cmd/db-setup.go	/^var dbSetupCmd = &cobra.Command{$/;"	v	package:cmd
 domain	domain/animal-repository.go	/^package domain$/;"	p
-domain	domain/animal-serivce.go	/^package domain$/;"	p
+domain	domain/animal-repository_test.go	/^package domain$/;"	p
+domain	domain/animal-service.go	/^package domain$/;"	p
+domain	domain/animal-service_test.go	/^package domain$/;"	p
+domain	domain/config.go	/^package domain$/;"	p
 func	.ctags	/^--regex-golang=\/func([ \\t]+\\([^)]+\\))?[ \\t]+([a-zA-Z0-9_]+)\/\\2\/f,func\/$/;"	k	langdef:golang
-getAllAnimals	domain/animal-repository.go	/^func getAllAnimals() ([]model.Animal, error) {$/;"	f	package:domain	typeref:typename:([]model.Animal, error)
-getAnimalById	domain/animal-repository.go	/^func getAnimalById(id string) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
 go-by-example-learning	README.md	/^# go-by-example-learning$/;"	c
 golang	.ctags	/^--langdef=golang$/;"	l
+gomock	domain/mock/animal-repository.go	/^	gomock "github.com\/golang\/mock\/gomock"$/;"	P	package:github.com/golang/mock/gomock
+gomock	domain/mock/animal-service.go	/^	gomock "github.com\/golang\/mock\/gomock"$/;"	P	package:github.com/golang/mock/gomock
 id	db_scripts/init.sql	/^  id         VARCHAR(36) NOT NULL,$/;"	E	table:animal
+init	cli/cmd/db-setup.go	/^func init() {$/;"	f	package:cmd
+init	cli/cmd/local.go	/^func init() {$/;"	f	package:cmd
+init	cli/cmd/setup.go	/^func init() {$/;"	f	package:cmd
+localCmd	cli/cmd/local.go	/^var localCmd = &cobra.Command{$/;"	v	package:cmd
+main	cli/serv-runner.go	/^func main() {$/;"	f	package:main
+main	cli/serv-runner.go	/^package main$/;"	p
 main	main.go	/^func main() {$/;"	f	package:main
 main	main.go	/^package main$/;"	p
+mock	domain/animal-repository_test.go	/^  mock "go-by-example\/domain\/mock"$/;"	P	package:go-by-example/domain/mock
+mock	domain/animal-service_test.go	/^  mock "go-by-example\/domain\/mock"$/;"	P	package:go-by-example/domain/mock
+mock	domain/mock/animal-repository.go	/^	mock *MockAnimalRepository$/;"	m	struct:mock_domain.MockAnimalRepositoryMockRecorder	typeref:typename:*MockAnimalRepository
+mock	domain/mock/animal-service.go	/^	mock *MockAnimalService$/;"	m	struct:mock_domain.MockAnimalServiceMockRecorder	typeref:typename:*MockAnimalService
+mock_domain	domain/mock/animal-repository.go	/^package mock_domain$/;"	p
+mock_domain	domain/mock/animal-service.go	/^package mock_domain$/;"	p
+model	domain/mock/animal-repository.go	/^	model "go-by-example\/model"$/;"	P	package:go-by-example/model
+model	domain/mock/animal-service.go	/^	model "go-by-example\/model"$/;"	P	package:go-by-example/model
 model	model/model.go	/^package model$/;"	p
 name	db_scripts/init.sql	/^  name       VARCHAR(30) NOT NULL,$/;"	E	table:animal
-updateAnimal	domain/animal-repository.go	/^func updateAnimal(anml model.Animal) (model.Animal, error) {$/;"	f	package:domain	typeref:typename:(model.Animal, error)
+recorder	domain/mock/animal-repository.go	/^	recorder *MockAnimalRepositoryMockRecorder$/;"	m	struct:mock_domain.MockAnimalRepository	typeref:typename:*MockAnimalRepositoryMockRecorder
+recorder	domain/mock/animal-service.go	/^	recorder *MockAnimalServiceMockRecorder$/;"	m	struct:mock_domain.MockAnimalService	typeref:typename:*MockAnimalServiceMockRecorder
+reflect	domain/mock/animal-repository.go	/^	reflect "reflect"$/;"	P	package:reflect
+reflect	domain/mock/animal-service.go	/^	reflect "reflect"$/;"	P	package:reflect
+rootCmd	cli/cmd/root.go	/^var rootCmd = &cobra.Command{$/;"	v	package:cmd
+setupCmd	cli/cmd/setup.go	/^var setupCmd = &cobra.Command{$/;"	v	package:cmd
 var	.ctags	/^--regex-golang=\/var[ \\t]+([a-zA-Z_][a-zA-Z0-9_]+)\/\\1\/v,var\/$/;"	k	langdef:golang

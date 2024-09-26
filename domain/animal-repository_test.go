@@ -4,16 +4,19 @@ import (
   "testing"
   "go-by-example/model"
   "github.com/google/uuid"
-  "github.com/golang/mock/gomock"
-  mock "go-by-example/domain/mock"
   "github.com/stretchr/testify/assert"
-  "errors"
+  "github.com/DATA-DOG/go-sqlmock"
+//  "fmt"
 )
 
 func TestAnimalRepository(t *testing.T) {
-  ctrl := gomock.NewController(t)
+  db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+  if err != nil {
+    t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+  }
+  defer db.Close()
 
-  repo := mock.NewAnimalRepository(ctrl)
+  repo := NewAnimalRepository(db)
 
   t.Run("getAllAnimals - successful case", func(t *testing.T) {
     want := []model.Animal{
@@ -28,10 +31,33 @@ func TestAnimalRepository(t *testing.T) {
         Id: uuid.MustParse("00000000-0000-0000-0000-000000000002"),
       },
     }
-    repo.EXPECT().GetAllAnimals().Return(want, nil).Times(1)
+    rows := sqlmock.NewRows([]string{"name", "age", "id"}).
+      AddRow("00000000-0000-0000-0000-000000000001","test", 1).
+      AddRow("00000000-0000-0000-0000-000000000002","test2", 2)
 
-    got, _ := service.GetAnimals()
+    mock.ExpectQuery("SELECT * FROM animal").WillReturnRows(rows)
 
-    assert.Equal(t, got, want)
+//    rs, err := db.Query("SELECT * FROM animal")
+//    if err != nil {
+//      fmt.Println("failed to match expected query")
+//      return
+//    }
+//    defer rs.Close()
+
+//    for rs.Next() {
+//      var id uuid.UUID
+//      var name string
+//      var age int
+//      rs.Scan(&name, &age, &id)
+//      fmt.Println("scanned id:", id, "and name:", name)
+//    }
+//
+//    if rs.Err() != nil {
+//      fmt.Println("got rows error:", rs.Err())
+//    }
+    
+    got, _ := repo.GetAllAnimals()
+
+    assert.Equal(t, want, got)
   })
 }

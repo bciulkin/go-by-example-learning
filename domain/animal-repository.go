@@ -34,6 +34,7 @@ func (repository *animalRepository) GetAllAnimals() ([]model.Animal, error) {
     return animals, fmt.Errorf("getAllAnimals: %v", err)
   }
   defer rows.Close()
+
   for rows.Next() {
     var animal model.Animal
     if err := rows.Scan(&animal.Id, &animal.Name, &animal.Age); err != nil {
