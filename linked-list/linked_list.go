@@ -27,15 +27,19 @@ func (list *LinkedList[T]) Add(value T) {
 }
 
 func (list *LinkedList[T]) Reverse() {
-  // convert to cilcular linked link
+  // convert regular linked list to circular linked list
   circular := list.head
+  length := 1
   for circular.next != nil {
+    length++;
     circular = circular.next
   }
   circular.next = list.head
 
   // move x times (x = length)
-  
+
+  // un-circulate the linked list
+  circular.next = nil
 }
 
 func (list *LinkedList[T]) Print() {
