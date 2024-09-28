@@ -26,20 +26,24 @@ func (list *LinkedList[T]) Add(value T) {
   }
 }
 
-func (list *LinkedList[T]) Reverse() {
-  // convert regular linked list to circular linked list
-  circular := list.head
-  length := 1
-  for circular.next != nil {
-    length++;
-    circular = circular.next
+
+// Reverse method uses stack to temporary hold all values
+// Idea for improvement would be more robust implementation for a stack
+func (list *LinkedList[T]) Reverse() LinkedList[T] {
+  var stack []T
+  tmp := list.head
+  for tmp.next != nil {
+    stack = append(stack, tmp.val)
+    tmp = tmp.next
   }
-  circular.next = list.head
 
-  // move x times (x = length)
+  stack = append(stack, tmp.val)
 
-  // un-circulate the linked list
-  circular.next = nil
+  reverseList := LinkedList[T] {}
+  for i := range len(stack) {
+    reverseList.Add(stack[len(stack) - i - 1])
+  }
+  return reverseList
 }
 
 func (list *LinkedList[T]) Print() {

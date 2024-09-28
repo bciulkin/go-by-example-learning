@@ -11,7 +11,8 @@ func main() {
   list.Add(3)
   list.Add(4)
 
-  list.Reverse()
+  reversedList := list.Reverse()
+  reversedList.Print()
 
   fmt.Println("int list:")
   list.Print()
