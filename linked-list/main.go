@@ -11,23 +11,26 @@ func main() {
   list.Add(3)
   list.Add(4)
 
+  //list.Reverse()
+
   fmt.Println("int list:")
   list.Print()
 
   // *********************************
-  stringList := LinkedList[string] {}
+  /*stringList := LinkedList[string] {}
   stringList.Add("raz")
   stringList.Add("dwa")
 
   fmt.Println("string list:")
   stringList.Print()
-
+*/
   // *********************************
-
+/*
   fooList := LinkedList[foo] {}
 
   fmt.Println("foo list:")
   fooList.Print()
+  */
 }
 
 type foo struct {

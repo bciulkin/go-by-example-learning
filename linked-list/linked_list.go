@@ -4,23 +4,38 @@ import (
   "fmt"
 )
 
-type LinkedList[T any] struct {
-  head, tail *element[T]
+type Node[T any] struct {
+  val T
+  next *Node[T]
 }
 
-type element[T any] struct {
-  next *element[T]
-  val T
+type LinkedList[T any] struct {
+  head *Node[T]
 }
 
 func (list *LinkedList[T]) Add(value T) {
-  if list.tail == nil { // add first element
-    list.head = &element[T]{val: value}
-    list.tail = list.head // in one element list tail is at the same time a head
+  nodeToAdd := &Node[T]{val: value, next: nil}
+  if list.head == nil { // add first element
+    list.head = nodeToAdd
   } else { // add non-first element
-    list.tail.next = &element[T]{val: value}
-    list.tail = list.tail.next
+    x := list.head
+    for x.next != nil {
+      x = x.next
+    }
+    x.next = nodeToAdd
   }
+}
+
+func (list *LinkedList[T]) Reverse() {
+  // convert to cilcular linked link
+  circular := list.head
+  for circular.next != nil {
+    circular = circular.next
+  }
+  circular.next = list.head
+
+  // move x times (x = length)
+  
 }
 
 func (list *LinkedList[T]) Print() {
