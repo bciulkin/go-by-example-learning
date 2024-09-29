@@ -6,16 +6,24 @@ import (
 
 func main() {
   list := LinkedList[int] {}
+  list.Add(4)
+  list.Add(3)
   list.Add(1)
   list.Add(2)
-  list.Add(3)
-  list.Add(4)
-
-  reversedList := list.Reverse()
-  reversedList.Print()
 
   fmt.Println("int list:")
   list.Print()
+
+  tail := list.tail()
+  fmt.Println(tail)
+
+  reversedList := list.Reverse()
+  fmt.Println("reversed list:")
+  reversedList.Print()
+
+  sortedList := list.quickSort()
+  fmt.Println("sorted list:")
+  sortedList.Print()
 
   // *********************************
   /*stringList := LinkedList[string] {}

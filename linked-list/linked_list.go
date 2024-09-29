@@ -2,14 +2,15 @@ package main
 
 import (
   "fmt"
+  "cmp"
 )
 
-type Node[T any] struct {
+type Node[T cmp.Ordered] struct {
   val T
   next *Node[T]
 }
 
-type LinkedList[T any] struct {
+type LinkedList[T cmp.Ordered] struct {
   head *Node[T]
 }
 
@@ -25,7 +26,6 @@ func (list *LinkedList[T]) Add(value T) {
     x.next = nodeToAdd
   }
 }
-
 
 // Reverse method uses stack to temporary hold all values
 // Idea for improvement would be more robust implementation for a stack
@@ -44,6 +44,68 @@ func (list *LinkedList[T]) Reverse() LinkedList[T] {
     reverseList.Add(stack[len(stack) - i - 1])
   }
   return reverseList
+}
+
+func (list *LinkedList[T]) partition(head Node[T], tail Node[T]) Node[T] {
+  pivot := head
+
+  fmt.Println("pivot: ", pivot)
+
+  pre := head
+  curr := head
+
+  for curr.next != nil {
+    if curr.val < pivot.val {
+      temp := curr.val
+      curr.val = pre.next.val
+      pre.next.val = temp
+
+      // Move pre to next node
+      pre = *pre.next
+    }
+
+    curr = *curr.next
+  }
+
+  // swap pivot data with pre data
+  currValue := pivot.val
+  pivot.val = pre.val
+  pre.val = currValue
+
+  return pre
+}
+
+func (list *LinkedList[T]) quickSortHelper(head Node[T], tail Node[T]) {
+  if (head.next == nil || head == tail) {
+    return
+  }
+
+  // find pivot node
+  pivot := list.partition(head, tail)
+
+  // recursive call for less than pivot list
+  list.quickSortHelper(head, pivot)
+
+  // recursive call for greater than pivot list
+  list.quickSortHelper(*pivot.next, tail)
+}
+
+func (list *LinkedList[T]) quickSort() *LinkedList[T] {
+  list.quickSortHelper(*list.head, *list.tail())
+  return list
+}
+
+func (list *LinkedList[T]) tail() *Node[T] {
+  tail := list.head
+  for tail.next != nil {
+    tail = tail.next
+  }
+  return tail
+
+}
+
+func (list *LinkedList[T]) binarySearch() {
+  
 }
 
 func (list *LinkedList[T]) Print() {
