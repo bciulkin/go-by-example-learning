@@ -46,7 +46,7 @@ func (list *LinkedList[T]) Reverse() LinkedList[T] {
   return reverseList
 }
 
-func (list *LinkedList[T]) partition(head Node[T], tail Node[T]) Node[T] {
+func (list *LinkedList[T]) partition(head *Node[T], tail *Node[T]) *Node[T] {
   pivot := head
 
   fmt.Println("pivot: ", pivot)
@@ -54,17 +54,22 @@ func (list *LinkedList[T]) partition(head Node[T], tail Node[T]) Node[T] {
   pre := head
   curr := head
 
-  for curr.next != nil {
+  for curr.next != tail.next {
     if curr.val < pivot.val {
+      fmt.Println("curr.val: ", curr.val)
+      fmt.Println("pivot.val: ", pivot.val)
       temp := curr.val
+      fmt.Println("temp: ", temp)
       curr.val = pre.next.val
+      fmt.Println("pre.next.val: ", pre.next.val)
       pre.next.val = temp
 
       // Move pre to next node
-      pre = *pre.next
+      pre = pre.next
     }
 
-    curr = *curr.next
+    // move curr to next node
+    curr = curr.next
   }
 
   // swap pivot data with pre data
@@ -75,7 +80,7 @@ func (list *LinkedList[T]) partition(head Node[T], tail Node[T]) Node[T] {
   return pre
 }
 
-func (list *LinkedList[T]) quickSortHelper(head Node[T], tail Node[T]) {
+func (list *LinkedList[T]) quickSortHelper(head *Node[T], tail *Node[T]) {
   if (head.next == nil || head == tail) {
     return
   }
@@ -87,11 +92,11 @@ func (list *LinkedList[T]) quickSortHelper(head Node[T], tail Node[T]) {
   list.quickSortHelper(head, pivot)
 
   // recursive call for greater than pivot list
-  list.quickSortHelper(*pivot.next, tail)
+  list.quickSortHelper(pivot.next, tail)
 }
 
 func (list *LinkedList[T]) quickSort() *LinkedList[T] {
-  list.quickSortHelper(*list.head, *list.tail())
+  list.quickSortHelper(list.head, list.tail())
   return list
 }
 
