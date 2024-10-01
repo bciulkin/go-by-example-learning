@@ -9,8 +9,8 @@ func main() {
   list.Add(4)
   list.Add(3)
   list.Add(1)
-  list.Add(2)
   list.Add(5)
+  list.Add(2)
 
   fmt.Println("int list:")
   list.Print()
@@ -22,9 +22,9 @@ func main() {
   fmt.Println("reversed list:")
   reversedList.Print()
 
-  sortedList := list.quickSort()
+  QuickSort(list.head)
   fmt.Println("sorted list:")
-  sortedList.Print()
+  list.Print()
 
   // *********************************
   /*stringList := LinkedList[string] {}
