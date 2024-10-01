@@ -49,19 +49,13 @@ func (list *LinkedList[T]) Reverse() LinkedList[T] {
 func (list *LinkedList[T]) partition(head *Node[T], tail *Node[T]) *Node[T] {
   pivot := head
 
-  fmt.Println("pivot: ", pivot)
-
   pre := head
   curr := head
 
-  for curr.next != tail.next {
+  for curr != tail.next {
     if curr.val < pivot.val {
-      fmt.Println("curr.val: ", curr.val)
-      fmt.Println("pivot.val: ", pivot.val)
       temp := curr.val
-      fmt.Println("temp: ", temp)
       curr.val = pre.next.val
-      fmt.Println("pre.next.val: ", pre.next.val)
       pre.next.val = temp
 
       // Move pre to next node
