@@ -15,9 +15,6 @@ func main() {
   fmt.Println("int list:")
   list.Print()
 
-  tail := list.tail()
-  fmt.Println(tail)
-
   reversedList := list.Reverse()
   fmt.Println("reversed list:")
   reversedList.Print()
@@ -26,6 +23,9 @@ func main() {
   fmt.Println("sorted list:")
   list.Print()
 
+  fmt.Println(binarySearch(list.head, 3)) // true
+  fmt.Println(binarySearch(list.head, 6)) // false
+  fmt.Println(binarySearch(list.head, 2)) // true
   // *********************************
   /*stringList := LinkedList[string] {}
   stringList.Add("raz")

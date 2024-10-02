@@ -46,67 +46,6 @@ func (list *LinkedList[T]) Reverse() LinkedList[T] {
   return reverseList
 }
 
-func (list *LinkedList[T]) partition(head *Node[T], tail *Node[T]) *Node[T] {
-  pivot := head
-
-  pre := head
-  curr := head
-
-  for curr != tail.next {
-    if curr.val < pivot.val {
-      temp := curr.val
-      curr.val = pre.next.val
-      pre.next.val = temp
-
-      // Move pre to next node
-      pre = pre.next
-    }
-
-    // move curr to next node
-    curr = curr.next
-  }
-
-  // swap pivot data with pre data
-  currValue := pivot.val
-  pivot.val = pre.val
-  pre.val = currValue
-
-  return pre
-}
-
-func (list *LinkedList[T]) quickSortHelper(head *Node[T], tail *Node[T]) {
-  if (head.next == nil || head == tail) {
-    return
-  }
-
-  // find pivot node
-  pivot := list.partition(head, tail)
-
-  // recursive call for less than pivot list
-  list.quickSortHelper(head, pivot)
-
-  // recursive call for greater than pivot list
-  list.quickSortHelper(pivot.next, tail)
-}
-
-func (list *LinkedList[T]) quickSort() *LinkedList[T] {
-  list.quickSortHelper(list.head, list.tail())
-  return list
-}
-
-func (list *LinkedList[T]) tail() *Node[T] {
-  tail := list.head
-  for tail.next != nil {
-    tail = tail.next
-  }
-  return tail
-
-}
-
-func (list *LinkedList[T]) binarySearch() {
-  
-}
-
 func (list *LinkedList[T]) Print() {
   var elements []T
   for e:= list.head; e != nil; e = e.next {
