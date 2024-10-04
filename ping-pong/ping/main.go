@@ -26,7 +26,5 @@ func ping(c *gin.Context) {
   if resp.Status == "200 OK" {
     time.Sleep(10 * time.Second)
     ping(c)
-    
-    c.IndentedJSON(http.StatusOK, "pong")
   }
 }
