@@ -17,8 +17,8 @@ func main() {
 	fmt.Println("01Knapstack problem.")
 	fmt.Println("Input:", input)
 
-	result := knapstack(input, value_provider.IntN(50))
-	fmt.Println("Result:", result)
+	result, resultValue := knapstack(input, value_provider.IntN(50))
+	fmt.Println("Result:", result, resultValue)
 }
 
 type Item struct {
@@ -27,8 +27,9 @@ type Item struct {
 }
 
 
-func knapstack(items []Item, weightLimit int) []Item {
+func knapstack(items []Item, weightLimit int) ([]Item, int) {
 	var result []Item
+	resultValue := 0
 
-	return result
+	return result, resultValue
 }
