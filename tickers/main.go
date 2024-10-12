@@ -3,6 +3,7 @@ package main
 import (
   "log"
   "time"
+  "sync"
 )
 
 func main() {
@@ -46,6 +47,27 @@ func main() {
 	for a :=1; a <= numJobs; a++ {
 		log.Println(<- results)
 	}
+
+	// ******************************
+	// WaitGroup example
+	var wg sync.WaitGroup
+	for i := 1; i <=5; i++ {
+		wg.Add(1)
+
+		go func() {
+			defer wg.Done()
+			workerI(i)
+		}()
+	}
+
+	wg.Wait()
+	log.Println("All done")
+}
+
+func workerI(id int) {
+	log.Println("Worker ", id, "starting")
+	time.Sleep(time.Second)
+	log.Println("Worker ", id, "done")
 }
 
 func worker(id int, jobs <-chan int, results chan<- int) {
