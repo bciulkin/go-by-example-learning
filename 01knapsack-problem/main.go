@@ -13,17 +13,26 @@ func main() {
 		Item{weight: value_provider.IntN(30), value: value_provider.IntN(30)},
 		Item{weight: value_provider.IntN(40), value: value_provider.IntN(40)},
 	}
+	limit1 := value_provider.IntN(50)
 
 	fmt.Println("01Knapstack problem.")
-	fmt.Println("Input:", input)
+	fmt.Println("Input: ", input, "limit: ", limit1)
 
-	result, resultValue := knapstack(input, value_provider.IntN(50))
-	fmt.Println("Result:", result, resultValue)
+	result := knapsack(input, limit1)
+	fmt.Println("Result:", result)
 	
 	fmt.Println("Empty input:", []Item{})
 
-	result2, resultValue2 := knapstack([]Item{}, value_provider.IntN(70))
-	fmt.Println("Result:", result2, resultValue2)
+	result2 := knapsack([]Item{}, value_provider.IntN(70))
+	fmt.Println("Result:", result2)
+	items := []Item{
+        {weight: 2, value: 3},
+        {weight: 3, value: 4},
+        {weight: 4, value: 5},
+        {weight: 5, value: 6},
+	}
+	capacity := 5
+	fmt.Println("Maximum value:", knapsack(items, capacity)) // Output: 7
 }
 
 type Item struct {
@@ -32,47 +41,25 @@ type Item struct {
 }
 
 
-func knapstack(items []Item, weightLimit int) (int, int) {
-	resultValue := 0
-	resultWeight := 0
-
+func knapsack(items []Item, weightLimit int) int {
 	n := len(items)
-	dp := make([][]int, n+1)
+	dp := make([]int, weightLimit+1)
 
-	
-	// if limit is 0 result is zero
-	if weightLimit == 0 {
-		return resultWeight, resultValue
-	}
-
-	if len(items) == 0 {
-		return resultWeight, resultValue
-	}
-
-	// sum all items to have max value regardless weight limit
-	for i := 0; i < len(items); i++ {
-		resultWeight += items[i].weight
-		resultValue += items[i].value
-	}
-
-	// as long as result weight is bigger weight limit, reduce one item
-	for weightLimit > resultWeight {
-		fmt.Println("current resultWeight: ", resultWeight)
-		maxValue := resultValue - items[0].value
-		for j := 1; j < len(items); j++ {
-			maxValue := maxOf(maxValue,	resultValue - item[j].value)
+	for i := 0; i < n; i++ {
+		for w:= weightLimit; w >= items[i].weight; w-- {
+			//fmt.Println(i, w, dp[w])
+			dp[w] = maxOf(dp[w], dp[w-items[i].weight]+items[i].value)
 		}
 	}
 
-
-
-	return resultWeight, resultValue
+	fmt.Println(dp)
+	return dp[weightLimit]
 }
 
 func maxOf(a int, b int) int {
 	if a > b {
 		return a
-	else {
+	} else {
 		return b
 	}
 }
