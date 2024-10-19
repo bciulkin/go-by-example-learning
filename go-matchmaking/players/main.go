@@ -1,30 +1,24 @@
 package main
 
 import (
-  "github.com/gin-gonic/gin"
   "net/http"
   "log"
-  "time"
+  //"time"
 )
 
 func main() {
-  router := gin.Default()
-  router.POST("/ping", ping)
-
-  log.Println("App is ready for ping-pong-ing.")
-  router.Run("localhost:8081")
+  // define worker pool (5)
+  
+  
+  p := NewPlayerParams()
+  log.Println(p)
+  http.PostForm("http://localhost:8080/player", p)
 }
 
-func ping(c *gin.Context) {
-  resp, err := http.Get("http://localhost:8080/pong")
-  if err != nil {
-    panic(err)
-  }
-  defer resp.Body.Close()
-
-  log.Println(resp.Status)
-  if resp.Status == "200 OK" {
-    time.Sleep(10 * time.Second)
-    ping(c)
+func worker(id int, jobs <-chan int, result chan<- int) {
+  for j := range jobs {
+    log.Println(j, id)
+  //  p := NewPlayerParams()
+    //resp, err := http.Post("http://localhost:8080/player", p)
   }
 }

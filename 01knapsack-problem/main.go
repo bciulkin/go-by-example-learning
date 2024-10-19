@@ -47,7 +47,6 @@ func knapsack(items []Item, weightLimit int) int {
 
 	for i := 0; i < n; i++ {
 		for w:= weightLimit; w >= items[i].weight; w-- {
-			//fmt.Println(i, w, dp[w])
 			dp[w] = maxOf(dp[w], dp[w-items[i].weight]+items[i].value)
 		}
 	}
