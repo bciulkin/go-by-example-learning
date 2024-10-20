@@ -2,8 +2,8 @@ package main
 
 import (
   "github.com/bciulkin/go-test-value-provider"
-  "net/url"
   "strconv"
+  "fmt"
 )
 
 type Player struct {
@@ -16,13 +16,8 @@ func NewPlayer() Player {
   return Player{Id: value_provider.String(), Rating: value_provider.IntNM(1100, 1600), Role: randomRole()}
 }
 
-func NewPlayerParams() url.Values {
-  params := url.Values{}
-  params.Add("id", value_provider.String())
-  params.Add("rating", strconv.Itoa(value_provider.IntNM(1100, 1600)))
-  params.Add("role", randomRole())
-
-  return params
+func NewPlayerJsonString() []byte {
+  return []byte(fmt.Sprintf(`{"id": %s, "rating": %s, "role": %s}`, value_provider.String(), strconv.Itoa(value_provider.IntNM(1100, 1600)), randomRole()))
 }
 
 type Role int

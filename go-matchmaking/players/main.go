@@ -3,6 +3,8 @@ package main
 import (
   "net/http"
   "fmt"
+  "bytes"
+  "io"
 )
 
 func main() {
@@ -32,7 +34,26 @@ func worker(id int, jobs <-chan int, results chan<- int) {
     fmt.Println("Print, worker")
     for j := range jobs {
         fmt.Println("Print, ", j, id)
-        http.PostForm("http://localhost:8080/player", NewPlayerParams())
+        url := "http://localhost:8080/player"
+
+        var jsonStr = NewPlayerJsonString()
+        //var jsonStr = []byte(`{"title":"Buy cheese and bread for breakfast."}`)
+        req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
+        req.Header.Set("Content-Type", "application/json")
+        
+        client := &http.Client{}
+        resp, err := client.Do(req)
+        
+        if err != nil {
+          panic(err)
+        }
+        defer resp.Body.Close()
+
+        fmt.Println("response Status:", resp.Status)
+        fmt.Println("response Headers:", resp.Header)
+        body, _ := io.ReadAll(resp.Body)
+        fmt.Println("response Body:", string(body))
+
         results <- j * 2
     }
 }
