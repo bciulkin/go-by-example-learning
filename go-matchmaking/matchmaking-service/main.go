@@ -8,7 +8,73 @@ import (
 	"sort"
 	"sync"
 	"time"
+	"github.com/gorilla/websocket"
 )
+
+// Upgrader to upgrade HTTP connection to WebSocket
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+type WebSocketClient struct {
+	conn *websocket.Conn
+	id string
+}
+
+// List of active WebSocket clients
+var clients = make(map[*WebSocketClient]bool)
+var clientsMu sync.Mutex
+
+func RegisterWebSocket(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		http.Error(w, "Failed to upgrade to Websocket", http.StatusInternalServerError)
+		return
+	}
+
+	// Read player name from query params
+	playerId := r.URL.Query().Get("id")
+	client := &WebSocketClient{conn: conn, id: playerId}
+
+	// Add client to the list of active clients
+	clientsMu.Lock()
+	clients[client] = true
+	clientsMu.Unlock()
+
+	// Handle WebSocket connection close
+	defer func() {
+		clientsMu.Lock()
+		delete(clients, client)
+		clientsMu.Unlock()
+		client.conn.Close()
+	}()
+
+	// Keep the connection open
+	for {
+		_, _, err := client.conn.ReadMessage()
+		if err != nil {
+			break
+		}
+	}
+}
+
+func NotifyMatchReady(match *Match) {
+	clientsMu.Lock()
+	defer clientsMu.Unlock()
+
+	for client := range clients {
+		for _, player := range append(match.Team1, match.Team2...) {
+			if client.id == player.Id {
+				// Send match info to this player
+				client.conn.WriteJSON(match)
+				fmt.Printf("Notified player %s about the match.\n", client.id)
+				break
+			}
+		}
+	}
+}
 
 // Player represents a player info sent by client
 type Player struct {
