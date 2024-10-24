@@ -1,10 +1,13 @@
 package main
 
 import (
-  "net/http"
   "fmt"
-  "bytes"
-  "io"
+  "encoding/json"
+  "log"
+  "os"
+  "os/signal"
+
+  "github.com/gorilla/websocket"
 )
 
 func main() {
@@ -14,6 +17,7 @@ func main() {
   const numJobs = 10
   jobs := make(chan int, numJobs)
   results := make(chan int, numJobs)
+
 
   for w := 1; w <= 4; w++ {
     go worker(w, jobs, results)
@@ -34,26 +38,55 @@ func worker(id int, jobs <-chan int, results chan<- int) {
     fmt.Println("Print, worker")
     for j := range jobs {
         fmt.Println("Print, ", j, id)
-        url := "http://localhost:8080/player"
-
-        var jsonStr = NewPlayerJsonString()
+  	// Connect to the WebSocket server
+	conn, _, err := websocket.DefaultDialer.Dial("ws://localhost:8080/player", nil)
+	if err != nil {
+		log.Fatal("Error connecting to WebSocket server:", err)
+	}
+	defer conn.Close()
         //var jsonStr = []byte(`{"title":"Buy cheese and bread for breakfast."}`)
-        req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
-        req.Header.Set("Content-Type", "application/json")
         
-        client := &http.Client{}
-        resp, err := client.Do(req)
+        // Send player info as JSON to the server
+	playerData, _ := json.Marshal(NewPlayer())
+	if err := conn.WriteMessage(websocket.TextMessage, playerData); err != nil {
+		log.Println("Error sending player info:", err)
+		return
+	}
         
-        if err != nil {
-          panic(err)
-        }
-        defer resp.Body.Close()
+        // Channel to listen for interrupt signals (e.g., CTRL+C)
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt)
 
-        fmt.Println("response Status:", resp.Status)
-        fmt.Println("response Headers:", resp.Header)
-        body, _ := io.ReadAll(resp.Body)
-        fmt.Println("response Body:", string(body))
+        // Read messages from the server
+	go func() {
+		for {
+			_, message, err := conn.ReadMessage()
+			if err != nil {
+				log.Println("Error reading message:", err)
+				return
+			}
+
+			// Check if it's a match or a waiting message
+			var match Match
+			if err := json.Unmarshal(message, &match); err == nil {
+				fmt.Println("Match created! Here are the teams:")
+				fmt.Println("Team 1:", match.Team1)
+				fmt.Println("Team 2:", match.Team2)
+			} else {
+				// Print waiting message
+				fmt.Println(string(message))
+			}
+		}
+	}()
+
+        // Keep the client running
+        select {
+	  case <-interrupt:
+	    fmt.Println("Client interrupted, closing connection.")
+	}
 
         results <- j * 2
     }
 }
+
+

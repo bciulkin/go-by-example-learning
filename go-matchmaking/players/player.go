@@ -12,6 +12,11 @@ type Player struct {
   Role string   `json:"role"`
 }
 
+type Match struct {
+	Team1 []Player `json:"team1"`
+	Team2 []Player `json:"team2"`
+}
+
 func NewPlayer() Player {
   return Player{Id: value_provider.String(), Rating: value_provider.IntNM(1100, 1600), Role: randomRole()}
 }

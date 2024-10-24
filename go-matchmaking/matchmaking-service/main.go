@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"sort"
@@ -22,58 +22,124 @@ type WebSocketClient struct {
 	conn *websocket.Conn
 	id string
 }
+// Matchmaker manages the pool of players and creates matches
+type Matchmaker struct {
+	PlayerPool []Player
+	Clients    map[*websocket.Conn]Player
+	mu         sync.Mutex
+}
 
-// List of active WebSocket clients
-var clients = make(map[*WebSocketClient]bool)
-var clientsMu sync.Mutex
+var matchmaker = &Matchmaker{
+	PlayerPool: []Player{},
+	Clients:    make(map[*websocket.Conn]Player),
+}
 
-func RegisterWebSocket(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		http.Error(w, "Failed to upgrade to Websocket", http.StatusInternalServerError)
-		return
+// adds a player to the pool and creates a match if we have 10 players
+func (m *Matchmaker) AddPlayer(conn *websocket.Conn, player Player) (*Match, bool) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	// Add player to the pool and map it to the WebSocket connection
+	m.PlayerPool = append(m.PlayerPool, player)
+	m.Clients[conn] = player
+
+	// If we have 10 players, create a match
+	if len(m.PlayerPool) >= 10 {
+		return m.createMatch(), true
+	}
+	return nil, false
+}
+
+// balances teams and creates a new match
+func (m *Matchmaker) createMatch() *Match {
+	// Sort players by rating (highest to lowest)
+	sort.Slice(m.PlayerPool, func(i, j int) bool {
+		return m.PlayerPool[i].Rating > m.PlayerPool[j].Rating
+	})
+
+	// Split players into two teams, balancing by rating
+	var team1, team2 []Player
+	team1Rating, team2Rating := 0, 0
+
+	for _, player := range m.PlayerPool[:10] {
+		if team1Rating <= team2Rating {
+			team1 = append(team1, player)
+			team1Rating += player.Rating
+		} else {
+			team2 = append(team2, player)
+			team2Rating += player.Rating
+		}
 	}
 
-	// Read player name from query params
-	playerId := r.URL.Query().Get("id")
-	client := &WebSocketClient{conn: conn, id: playerId}
+	// Remove the 10 players used to create this match from the pool
+	m.PlayerPool = m.PlayerPool[10:]
 
-	// Add client to the list of active clients
-	clientsMu.Lock()
-	clients[client] = true
-	clientsMu.Unlock()
+	return &Match{
+		Team1: team1,
+		Team2: team2,
+	}
+}
 
-	// Handle WebSocket connection close
-	defer func() {
-		clientsMu.Lock()
-		delete(clients, client)
-		clientsMu.Unlock()
-		client.conn.Close()
-	}()
+// handles new WebSocket connections
+func handleWebSocket(w http.ResponseWriter, r *http.Request) {
+	// Upgrade the HTTP connection to WebSocket
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		http.Error(w, "Failed to upgrade to WebSocket", http.StatusInternalServerError)
+		return
+	}
+	defer conn.Close()
 
-	// Keep the connection open
+	// Listen for messages from the client
 	for {
-		_, _, err := client.conn.ReadMessage()
+		_, message, err := conn.ReadMessage()
 		if err != nil {
-			break
+			log.Println("Error reading message:", err)
+			return
+		}
+
+		// Parse the player info from JSON
+		var player Player
+		if err := json.Unmarshal(message, &player); err != nil {
+			log.Println("Invalid JSON:", err)
+			continue
+		}
+
+		// Add the player to the pool and check if a match can be created
+		match, matchCreated := matchmaker.AddPlayer(conn, player)
+		if matchCreated {
+			// Notify all 10 players in the match via their WebSocket connections
+			matchmaker.mu.Lock()
+			for clientConn, p := range matchmaker.Clients {
+				if isInMatch(p, match) {
+					if err := clientConn.WriteJSON(match); err != nil {
+						log.Println("Error sending match to player:", err)
+					}
+				}
+			}
+			matchmaker.mu.Unlock()
+		} else {
+			// Notify the player they have been added to the pool
+			if err := conn.WriteMessage(websocket.TextMessage, []byte("Player added to the pool. Waiting for more players...")); err != nil {
+				log.Println("Error sending response:", err)
+			}
 		}
 	}
 }
 
-func NotifyMatchReady(match *Match) {
-	clientsMu.Lock()
-	defer clientsMu.Unlock()
-
-	for client := range clients {
-		for _, player := range append(match.Team1, match.Team2...) {
-			if client.id == player.Id {
-				// Send match info to this player
-				client.conn.WriteJSON(match)
-				fmt.Printf("Notified player %s about the match.\n", client.id)
-				break
-			}
+// checks if the player is part of the match
+func isInMatch(player Player, match *Match) bool {
+	for _, p := range match.Team1 {
+		if p.Id == player.Id {
+			return true
 		}
 	}
+	for _, p := range match.Team2 {
+		if p.Id == player.Id {
+			return true
+		}
+	}
+	return false
 }
 
 // Player represents a player info sent by client
@@ -89,92 +155,12 @@ type Match struct {
 	Team2 []Player `json:"team2"`
 }
 
-// Matchmaker manages the pool of players and creates matches
-type Matchmaker struct {
-	PlayerPool []Player
-	mu         sync.Mutex
-}
-
-// AddPlayer adds a player to the pool and triggers matchmaking if pool size reaches 10
-func (m *Matchmaker) AddPlayer(player Player) (*Match, bool) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	// Add player to the pool
-	m.PlayerPool = append(m.PlayerPool, player)
-
-	// If we have 10 players, create a match
-	if len(m.PlayerPool) >= 10 {
-		return m.createMatch(), true
-	}
-	return nil, false
-}
-
-// createMatch balances teams and creates a new match
-func (m *Matchmaker) createMatch() *Match {
-	// Sort players by rating (highest to lowest)
-	sort.Slice(m.PlayerPool, func(i, j int) bool {
-		return m.PlayerPool[i].Rating > m.PlayerPool[j].Rating
-	})
-
-	// Split players into two teams, balancing by rating
-	var team1, team2 []Player
-	team1Rating, team2Rating := 0, 0
-
-	for i, player := range m.PlayerPool[:10] {
-		// Add players alternatively to teams to balance ratings
-		if team1Rating <= team2Rating {
-			team1 = append(team1, player)
-			team1Rating += player.Rating
-		} else {
-			team2 = append(team2, player)
-			team2Rating += player.Rating
-		}
-		fmt.Printf("Assigning player %s to team %d\n", player.Id, (i%2)+1)
-	}
-
-	// Remove the players used to create this match from the pool
-	m.PlayerPool = m.PlayerPool[10:]
-
-	return &Match{
-		Team1: team1,
-		Team2: team2,
-	}
-}
-
-var matchmaker = &Matchmaker{PlayerPool: []Player{}}
-
-// handleMatchmaking handles player info submissions and matchmaking
-func handleMatchmaking(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-		return
-	}
-
-	var player Player
-	if err := json.NewDecoder(r.Body).Decode(&player); err != nil {
-		http.Error(w, "Invalid JSON", http.StatusBadRequest)
-		return
-	}
-
-	match, matched := matchmaker.AddPlayer(player)
-	if matched {
-		// Return the match as JSON
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(match)
-		fmt.Println("Match created!")
-	} else {
-		w.WriteHeader(http.StatusAccepted)
-		fmt.Fprintf(w, "Player %s added to the pool. Waiting for more players...", player.Id)
-	}
-}
-
 func main() {
 	rand.Seed(time.Now().UnixNano())
-	http.HandleFunc("/player", handleMatchmaking)
 
-	fmt.Println("Matchmaking service started on :8080")
+	http.HandleFunc("/player", handleWebSocket)
+	log.Println("Matchmaking WebSocket server started on :8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
-		panic(err)
+		log.Fatal("ListenAndServe: ", err)
 	}
 }
