@@ -6,48 +6,26 @@ import (
   "log"
   "os"
   "os/signal"
-
   "github.com/gorilla/websocket"
 )
 
 func main() {
-  // define worker pool (5)
   
-  
-  const numJobs = 10
-  jobs := make(chan int, numJobs)
-  results := make(chan int, numJobs)
-
-
-  for w := 1; w <= 4; w++ {
-    go worker(w, jobs, results)
+  for w := 1; w <= 10; w++ {
+    go worker(w, NewPlayer())
   }
 
-  for j := 1; j <= numJobs; j++ {
-    jobs <- j
-  }
-  close(jobs)
-
-  for a := 1; a <= numJobs; a++ {
-    <-results
-  }
 }
 
-func worker(id int, jobs <-chan int, results chan<- int) {
-
-    fmt.Println("Print, worker")
-    for j := range jobs {
-        fmt.Println("Print, ", j, id)
-  	// Connect to the WebSocket server
+func worker(id int, player Player) {
 	conn, _, err := websocket.DefaultDialer.Dial("ws://localhost:8080/player", nil)
 	if err != nil {
 		log.Fatal("Error connecting to WebSocket server:", err)
 	}
 	defer conn.Close()
-        //var jsonStr = []byte(`{"title":"Buy cheese and bread for breakfast."}`)
         
         // Send player info as JSON to the server
-	playerData, _ := json.Marshal(NewPlayer())
+	playerData, _ := json.Marshal(player)
 	if err := conn.WriteMessage(websocket.TextMessage, playerData); err != nil {
 		log.Println("Error sending player info:", err)
 		return
@@ -84,9 +62,6 @@ func worker(id int, jobs <-chan int, results chan<- int) {
 	  case <-interrupt:
 	    fmt.Println("Client interrupted, closing connection.")
 	}
-
-        results <- j * 2
-    }
 }
 
 
