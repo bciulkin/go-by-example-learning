@@ -59,8 +59,10 @@ func (m *Matchmaker) createMatch() *Match {
 	})
 
 	// Split players into two teams, balancing by rating
-	var team1, team2 []Player
+	var team1, team2 Team
 	team1Rating, team2Rating := 0, 0
+
+	// TODO: Refactor
 
 	for _, player := range m.PlayerPool[:10] {
 		if team1Rating <= team2Rating {
@@ -151,10 +153,16 @@ type Player struct {
 	Role   string `json:"role"`
 }
 
+type Team struct {
+	tank Player
+	dps [2]Player
+	support [2]Player
+}
+
 // Match contains two balanced teams
 type Match struct {
-	Team1 []Player `json:"team1"`
-	Team2 []Player `json:"team2"`
+	Team1 Team `json:"team1"`
+	Team2 Team `json:"team2"`
 }
 
 func main() {
