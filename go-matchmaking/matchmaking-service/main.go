@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 	"github.com/gorilla/websocket"
+	"fmt"
 )
 
 // Upgrader to upgrade HTTP connection to WebSocket
@@ -120,7 +121,8 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			matchmaker.mu.Unlock()
 		} else {
 			// Notify the player they have been added to the pool
-			if err := conn.WriteMessage(websocket.TextMessage, []byte("Player added to the pool. Waiting for more players...")); err != nil {
+			responseMessage := fmt.Sprintf("Player %s added to the pool.", player.Id)
+			if err := conn.WriteMessage(websocket.TextMessage, []byte(responseMessage)); err != nil {
 				log.Println("Error sending response:", err)
 			}
 		}
