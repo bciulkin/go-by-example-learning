@@ -25,13 +25,17 @@ type WebSocketClient struct {
 }
 // Matchmaker manages the pool of players and creates matches
 type Matchmaker struct {
-	PlayerPool []Player
+	DpsPool []Player
+	TankPool []Player
+	SupportPool []Player
 	Clients    map[*websocket.Conn]Player
 	mu         sync.Mutex
 }
 
 var matchmaker = &Matchmaker{
-	PlayerPool: []Player{},
+	DpsPool: []Player{},
+	TankPool: []Player{},
+	SupportPool: []Player{},
 	Clients:    make(map[*websocket.Conn]Player),
 }
 
@@ -41,46 +45,48 @@ func (m *Matchmaker) AddPlayer(conn *websocket.Conn, player Player) (*Match, boo
 	defer m.mu.Unlock()
 
 	// Add player to the pool and map it to the WebSocket connection
-	m.PlayerPool = append(m.PlayerPool, player)
+	switch player.Role {
+		case "tank": m.TankPool = append(m.TankPool, player)
+		case "dps": m.DpsPool = append(m.DpsPool, player)
+		case "support": m.SupportPool = append(m.SupportPool, player)
+	}
 	m.Clients[conn] = player
 
 	// If we have 10 players, create a match
-	if len(m.PlayerPool) >= 10 {
-		return m.createMatch(), true
+	if len(m.DpsPool) >= 4 && len(m.SupportPool) >=4 && len(m.TankPool) >=2 {
+		return m.createMatch()
 	}
 	return nil, false
 }
 
 // balances teams and creates a new match
-func (m *Matchmaker) createMatch() *Match {
+func (m *Matchmaker) createMatch() (*Match, bool) {
 	// Sort players by rating (highest to lowest)
-	sort.Slice(m.PlayerPool, func(i, j int) bool {
-		return m.PlayerPool[i].Rating > m.PlayerPool[j].Rating
+	sort.Slice(m.TankPool, func(i, j int) bool {
+		return m.TankPool[i].Rating > m.TankPool[j].Rating
+	})
+
+	sort.Slice(m.SupportPool, func(i, j int) bool {
+		return m.SupportPool[i].Rating > m.SupportPool[j].Rating
+	})
+
+	sort.Slice(m.DpsPool, func(i, j int) bool {
+		return m.DpsPool[i].Rating > m.DpsPool[j].Rating
 	})
 
 	// Split players into two teams, balancing by rating
 	var team1, team2 Team
 	team1Rating, team2Rating := 0, 0
 
-	// TODO: Refactor
-
-	for _, player := range m.PlayerPool[:10] {
-		if team1Rating <= team2Rating {
-			team1 = append(team1, player)
-			team1Rating += player.Rating
-		} else {
-			team2 = append(team2, player)
-			team2Rating += player.Rating
-		}
-	}
+	// TODO: re-implement assigning strategy
 
 	// Remove the 10 players used to create this match from the pool
-	m.PlayerPool = m.PlayerPool[10:]
+	//m.PlayerPool = m.PlayerPool[10:]
 
 	return &Match{
 		Team1: team1,
 		Team2: team2,
-	}
+	}, false
 }
 
 // handles new WebSocket connections
@@ -133,12 +139,13 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 // checks if the player is part of the match
 func isInMatch(player Player, match *Match) bool {
-	for _, p := range match.Team1 {
+
+	for _, p := range match.Team1.allPlayers() {
 		if p.Id == player.Id {
 			return true
 		}
 	}
-	for _, p := range match.Team2 {
+	for _, p := range match.Team2.allPlayers() {
 		if p.Id == player.Id {
 			return true
 		}
@@ -157,6 +164,16 @@ type Team struct {
 	tank Player
 	dps [2]Player
 	support [2]Player
+}
+
+func (t *Team) allPlayers() [5]Player {
+	var players [5]Player
+	players[0] = t.tank
+	players[1] = t.dps[0]
+	players[2] = t.dps[1]
+	players[3] = t.support[0]
+	players[4] = t.support[1]
+	return players
 }
 
 // Match contains two balanced teams
